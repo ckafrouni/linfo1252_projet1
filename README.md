@@ -10,12 +10,13 @@ In that regard, the three considered applications are:
 - the problem of producers/consumers.
 
 ## Usage
-A script, `/src/test_scripts/launch_tests.sh`. allows to compile the `.c` code and launch tests. This will produce graphs on the performance of the code.
-It can be run directly using this command:
+A script, `run_tests.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
+
+It can be run directly from the `root` directory, using this command:
 ```shell
 bash launch_tests.sh
 ```
 
-## Authors and acknowledgment
+## Authors
 @Bousmar Cyril (https://forge.uclouvain.be/CyrilBousmar)
 @Kafrouni Christophe (https://forge.uclouvain.be/ckafrouni)
