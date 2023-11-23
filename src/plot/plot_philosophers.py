@@ -7,13 +7,12 @@ import argparse
 def plot_philosophers_data(input_dir, output_dir):  
     data = pd.read_csv(f"{input_dir}/res_philosophers.csv")
 
-    # TODO : errorbar should be = moyenne a l'ecart type
     sns.pointplot(data=data, x="thread", y="time", errorbar='sd')
 
     plt.title('Time to process philosophers application by number of threads.')
     plt.xlabel('Number of treads')
-    # TODO : y should start at 0.
-    plt.ylabel('Execution time (ms)')
+    plt.ylabel('Execution time (seconds)')
+    plt.ylim(0)
     plt.grid(True, axis='y')
 
     plt.savefig(f"{output_dir}/PHILOSOPHERS.pdf", format='pdf')

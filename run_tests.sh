@@ -17,6 +17,7 @@ DIR_GRAPHS=$PROJECT_DIR'/plots'
 # RUN TESTS PHILOSOPHERS
 # ---------------------------------------------
 cd $DIR_MAIN && make -s philosophers &
+sleep 2s
 bash $DIR_TESTS/perf_philosophers.sh $DIR_TARGET $DIR_DATA
 python3 $DIR_PLOTS/plot_philosophers.py $DIR_DATA $DIR_GRAPHS
 

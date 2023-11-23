@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
     }
 
     int n_philosophers = strtol(argv[1], NULL, 10);
-    printf("n philosophers : %d\n", n_philosophers);
 
     pthread_mutex_t sticks[n_philosophers];
     pthread_t philosophers[n_philosophers];

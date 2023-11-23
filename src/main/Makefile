@@ -13,7 +13,7 @@ $(TARGET_DIR)/%: %.c
 	-$(CC) $(CFLAGS) $< -o $@
 
 philosophers: $(TARGET_DIR)
-	-$(CC) $(CFLAGS) philosophers.c -o ./$(TARGET_DIR)/philosophers.o
+	-$(CC) $(CFLAGS) philosophers.c -o $(TARGET_DIR)/philosophers.o
 
 # Commands
 test:
