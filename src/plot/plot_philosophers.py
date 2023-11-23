@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv('./data/res_philosophers.csv')
 
-sns.pointplot(data=data, x="thread", y="time", hue="build", markers=["s", "D"], linestyles=["-", "-"], errorbar='ci')
+# TODO : errorbar should be = moyenne a l'ecart type
+sns.pointplot(data=data, x="thread", y="time", errorbar='ci')
 
-plt.title('Time to process algorithm by number of threads.')
+plt.title('Time to process philosophers application by number of threads.')
 plt.xlabel('Number of treads')
-plt.ylabel('Time (ms)')
+# TODO : y should start at 0.
+plt.ylabel('Execution time (ms)')
 plt.grid(True, axis='y')
 plt.legend(title="build type :")
 

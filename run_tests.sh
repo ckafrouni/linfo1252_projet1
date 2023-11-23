@@ -2,6 +2,7 @@
 # ---------------------------------------------
 # SET TEST ENVIRONMENT
 # ---------------------------------------------
+DIR_MAIN='./src/main'
 DIR_TESTS='./src/test'
 DIR_PLOTS='./src/plot'
 DIR_DATA='./data'
@@ -12,7 +13,7 @@ DIR_DATA='./data'
 # ---------------------------------------------
 # RUN TESTS PHILOSOPHERS
 # ---------------------------------------------
-bash $DIR_TESTS/perf_philosophers.sh $DIR_DATA
+bash $DIR_TESTS/perf_philosophers.sh $DIR_MAIN $DIR_DATA
 python3 $DIR_PLOTS/plot_philosophers.py
 
 # ---------------------------------------------
