@@ -1,16 +1,26 @@
-CC=gcc
-CFLAGS=-g -Wall -Wextra
+CC = gcc
+CFLAGS = -g -Wall -Wextra
+TARGET_DIR = target
+SOURCES = $(wildcard *.c)
+EXECUTABLES = $(SOURCES:%.c=$(TARGET_DIR)/%)
 
-TARGET=target
-SRC=src
+all: $(TARGET_DIR) $(EXECUTABLES)
 
-$(TARGET):
-	mkdir $(TARGET)
+$(TARGET_DIR):
+	mkdir -p $(TARGET_DIR)
 
-build_philosopher: $(SRC)/philosophers.c
-	$(CC) $(CFLAGS) -o $(TARGET)/philosophers $(SRC)/philosophers.c
+$(TARGET_DIR)/%: %.c
+	-$(CC) $(CFLAGS) $< -o $@
 
-
+# Commands
+test:
+	@echo "Tests are not implemented yet"
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(TARGET_DIR)
+
+# Temporary commands
+time_phil: all
+	time ./$(TARGET_DIR)/philosophers 8
+
+.PHONY: all clean test run_philosophers
