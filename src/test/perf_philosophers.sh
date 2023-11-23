@@ -23,7 +23,7 @@ for i in "${!NB_THREADS[@]}"; do
 
         echo "[Test $((i + 1)) run $k/$NB_TESTS]($((INDEX + 1))/$TOTAL_TESTS)"
 
-        ELAPSED_TIME=$( TIMEFORMAT='%R'; { time $DIR_TARGET/philosophers.o $THREAD ;} 2>&1)
+        ELAPSED_TIME=$( TIMEFORMAT='%R'; { time $DIR_TARGET/philosophers $THREAD ;} 2>&1)
         echo "$ELAPSED_TIME"
 
         echo "$INDEX,$THREAD,$ELAPSED_TIME,$((k - 1))" >> "$CSV_FILE"
