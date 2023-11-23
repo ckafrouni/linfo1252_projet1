@@ -12,6 +12,9 @@ $(TARGET_DIR):
 $(TARGET_DIR)/%: %.c
 	-$(CC) $(CFLAGS) $< -o $@
 
+philosophers: $(TARGET_DIR)
+	-$(CC) $(CFLAGS) philosophers.c -o ./$(TARGET_DIR)/philosophers.o
+
 # Commands
 test:
 	@echo "Tests are not implemented yet"

@@ -2,10 +2,13 @@
 # ---------------------------------------------
 # SET TEST ENVIRONMENT
 # ---------------------------------------------
-DIR_MAIN='./src/main'
-DIR_TESTS='./src/test'
-DIR_PLOTS='./src/plot'
-DIR_DATA='./data'
+PROJECT_DIR=$(dirname "${BASH_SOURCE[0]}")
+DIR_MAIN=$PROJECT_DIR'/src/main'
+DIR_TARGET=$PROJECT_DIR'/src/main/target'
+DIR_TESTS=$PROJECT_DIR'/src/test'
+DIR_PLOTS=$PROJECT_DIR'/src/plot'
+DIR_DATA=$PROJECT_DIR'/data'
+DIR_GRAPHS=$PROJECT_DIR'/plots'
 # python3 -m pip install --user matplotlib
 # python3 -m pip install --user pandas
 # python3 -m pip install --user seaborn
@@ -13,8 +16,9 @@ DIR_DATA='./data'
 # ---------------------------------------------
 # RUN TESTS PHILOSOPHERS
 # ---------------------------------------------
-bash $DIR_TESTS/perf_philosophers.sh $DIR_MAIN $DIR_DATA
-python3 $DIR_PLOTS/plot_philosophers.py
+cd $DIR_MAIN && make -s philosophers &
+bash $DIR_TESTS/perf_philosophers.sh $DIR_TARGET $DIR_DATA
+python3 $DIR_PLOTS/plot_philosophers.py $DIR_DATA $DIR_GRAPHS
 
 # ---------------------------------------------
 # RUN TESTS READERS/WRITERS
@@ -27,4 +31,4 @@ python3 $DIR_PLOTS/plot_philosophers.py
 # ---------------------------------------------
 # CLEAR TEMPORARY FILES
 # ---------------------------------------------
-cd src && make clean > /dev/null 2>&1
+cd $DIR_MAIN && make -s clean & > /dev/null 2>&1
