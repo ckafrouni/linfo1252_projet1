@@ -3,12 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-// #define N_CYCLES 100 // 100
-#define N_CYCLES 1000 // 1 thousand
-// #define N_CYCLES 10000 // 10 thousands
-// #define N_CYCLES 100000 // 100 thousands
-// #define N_CYCLES 1000000 // 1 million
-// #define N_CYCLES 10000000 // 10 millions
+#define N_CYCLES 10000000 // 10 millions
 
 typedef struct
 {
@@ -19,11 +14,14 @@ typedef struct
 
 void eat(int id)
 {
-    printf("Philosopher [%d] eats\n", id);
-    for (int i = 0; i < rand(); i++)
-    {
-        // philosopher eats
-    }
+    (void)id;
+    // printf("Philosopher [%d] eats\n", id);
+}
+
+void think(int id)
+{
+    (void)id;
+    // printf("Philosopher [%d] thinks\n", id);
 }
 
 void *philosopher(void *arg)
@@ -35,7 +33,8 @@ void *philosopher(void *arg)
 
     for (size_t i = 0; i < N_CYCLES; i++)
     {
-        // philosopher thinks
+        think(x->id);
+
         if (left < right)
         {
             pthread_mutex_lock(&x->sticks[left]);
@@ -46,8 +45,9 @@ void *philosopher(void *arg)
             pthread_mutex_lock(&x->sticks[right]);
             pthread_mutex_lock(&x->sticks[left]);
         }
-        // printf("%d\n", i);
+
         eat(x->id);
+
         pthread_mutex_unlock(&x->sticks[left]);
         pthread_mutex_unlock(&x->sticks[right]);
     }

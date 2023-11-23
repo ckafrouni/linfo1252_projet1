@@ -20,7 +20,7 @@ clean:
 	rm -rf $(TARGET_DIR)
 
 # Temporary commands
-run_philosophers: all
-	time ./$(TARGET_DIR)/philosophers 3
+time_phil: all
+	time ./$(TARGET_DIR)/philosophers 8
 
 .PHONY: all clean test run_philosophers
