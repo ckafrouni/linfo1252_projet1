@@ -12,11 +12,11 @@ In that regard, the three considered applications are:
 ## Usage
 
 ### All in one script
-A script, `run_tests.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
+A script, `experiments.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
 
 It can be run directly from the `root` directory, using this command:
 ```shell
-bash launch_tests.sh
+bash experiments.sh
 ```
 
 After the run, performs a `make clean`.
@@ -79,6 +79,7 @@ make clean
 - [ ] why would producers/consumers fail and block for values `2 4` or `4 2` ?
 - [ ] modify `rand()` in producers/consumers to prevent overflow and get good results.
 - [ ] what is the use of `make test` since we need `experiments.sh` ?
+- [ ] should we use `barplot` instead of `lineplot` ?
 
 ## Authors
 @Bousmar Cyril (https://forge.uclouvain.be/CyrilBousmar)
