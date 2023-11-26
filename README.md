@@ -56,17 +56,14 @@ make test
 
 **Or**, you can target a specific test using the following:
 ```shell
-make test_setup
 make test_philosophers
 ```
 
 ```shell
-make test_setup
 make test_producers_consumers
 ```
 
 ```shell
-make test_setup
 make test_readers_writers
 ```
 
@@ -75,6 +72,13 @@ To clean all executables, run the following command:
 ```shell
 make clean
 ```
+
+## TODO
+
+- [] readers/writers was modified to unblock the code, but why is the code from previous TP not valid ?
+- [] why would producers/consumers fail and block for values `2 4` or `4 2` ?
+- [] modify `rand()` in producers/consumers to prevent overflow and get good results.
+- [] what is the use of `make test` since we need `experiments.sh` ?
 
 ## Authors
 @Bousmar Cyril (https://forge.uclouvain.be/CyrilBousmar)
