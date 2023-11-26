@@ -55,7 +55,8 @@ test_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers test_s
 	python3 $(DIR_PLOTS)/plot_producers-consumers.py $(DIR_DATA) $(DIR_GRAPHS)
 
 test_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers test_setup
-	@echo "Readers/Writers tests are not implemented yet"
+	bash $(DIR_TESTS)/perf_readers-writers.sh $(DIR_TARGET) $(DIR_DATA)
+	python3 $(DIR_PLOTS)/plot_readers-writers.py $(DIR_DATA) $(DIR_GRAPHS)
 
 # ---------------------------------------------
 # CLEAN SECTION
