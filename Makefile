@@ -42,16 +42,17 @@ DIR_GRAPHS := plots
 test: test_setup test_philosophers test_producers_consumers test_readers_writers
 
 test_setup:
-	@python3 -m pip install --user matplotlib
-	@python3 -m pip install --user pandas
-	@python3 -m pip install --user seaborn
+	@python3 -m pip install matplotlib
+	@python3 -m pip install pandas
+	@python3 -m pip install seaborn
 
-test_philosophers:
+test_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
 	bash $(DIR_TESTS)/perf_philosophers.sh $(DIR_TARGET) $(DIR_DATA)
 	python3 $(DIR_PLOTS)/plot_philosophers.py $(DIR_DATA) $(DIR_GRAPHS)
 
 test_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
 	@echo "Producers/Consumers tests are not implemented yet"
+	./$(DIR_TARGET)/producers_consumers 2 2
 
 test_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
 	@echo "Readers/Writers tests are not implemented yet"
