@@ -16,7 +16,6 @@ int free_indexes[N];
 
 void print_buffer()
 {
-    // 1 1 1 1 1 1 1 1
     printf("[");
     for (int i = 0; i < N; i++)
     {
@@ -79,16 +78,17 @@ int remove_item(void)
     return buffer[i];
 }
 
-void *producer(void *)
+void *producer(void * arg)
 {
+    int *n_producers = (int *)arg;
     int item;
-    for (int i = 0; i < N_CYCLES; i++)
+    for (int i = 0; i < (N_CYCLES / (*n_producers)); i++)
     {
         item = produce_item();
         sem_wait(&empty);
         pthread_mutex_lock(&mutex);
         insert_item(item);
-        print_buffer();
+        // print_buffer();
         pthread_mutex_unlock(&mutex);
         sem_post(&full);
     }
@@ -96,18 +96,18 @@ void *producer(void *)
     return (NULL);
 }
 
-void *consumer(void *)
+void *consumer(void * arg)
 {
+    int *n_consumers = (int *)arg;
     int item;
-    for (int i = 0; i < N_CYCLES; i++)
+    for (int i = 0; i < (N_CYCLES / (*n_consumers)); i++)
     {
         sem_wait(&full);
         pthread_mutex_lock(&mutex);
         item = remove_item();
-        print_buffer();
+        // print_buffer();
         pthread_mutex_unlock(&mutex);
         sem_post(&empty);
-
         consume_item(item);
     }
 
@@ -139,12 +139,12 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n_producers; i++)
     {
-        pthread_create(&producers[i], NULL, producer, NULL);
+        pthread_create(&producers[i], NULL, producer, &n_producers);
     }
 
     for (int i = 0; i < n_consumers; i++)
     {
-        pthread_create(&consumers[i], NULL, consumer, NULL);
+        pthread_create(&consumers[i], NULL, consumer, &n_consumers);
     }
 
     for (int i = 0; i < n_producers; i++)

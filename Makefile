@@ -13,18 +13,18 @@ EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 all: $(DIR_TARGET) $(EXECUTABLES)
 
 $(DIR_TARGET):
-	mkdir -p $(DIR_TARGET)
+	@mkdir -p $(DIR_TARGET)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
-	-$(CC) $(CFLAGS) $< -o $@
-
-build: $(DIR_TARGET) build_philosophers build_producers_consumers build_readers_writers
+	@-$(CC) $(CFLAGS) $< -o $@
 
 build_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
 
 build_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
 
 build_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
+
+build: $(DIR_TARGET) build_philosophers build_producers_consumers build_readers_writers
 
 # ---------------------------------------------
 # RUN SECTION
@@ -46,15 +46,15 @@ test_setup:
 	@python3 -m pip install pandas
 	@python3 -m pip install seaborn
 
-test_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
+test_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers test_setup
 	bash $(DIR_TESTS)/perf_philosophers.sh $(DIR_TARGET) $(DIR_DATA)
 	python3 $(DIR_PLOTS)/plot_philosophers.py $(DIR_DATA) $(DIR_GRAPHS)
 
-test_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
-	@echo "Producers/Consumers tests are not implemented yet"
-	./$(DIR_TARGET)/producers_consumers 2 2
+test_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers test_setup
+	bash $(DIR_TESTS)/perf_producers-consumers.sh $(DIR_TARGET) $(DIR_DATA)
+	python3 $(DIR_PLOTS)/plot_producers-consumers.py $(DIR_DATA) $(DIR_GRAPHS)
 
-test_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
+test_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers test_setup
 	@echo "Readers/Writers tests are not implemented yet"
 
 # ---------------------------------------------
