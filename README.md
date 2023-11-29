@@ -10,7 +10,8 @@ In that regard, the three considered applications are:
 - the problem of producers/consumers.
 
 ## Usage
---------
+This section explains how to use this project.
+
 ### In local project environment
 
 #### All in one script
@@ -83,7 +84,12 @@ make clean
 This following section describes how to use this project to run the tests within `Inginious` environment.
 
 #### Running tests
-The script `experiment.sh` is used in the environment to run specific tests. Use the prompted instructions to know how to use it.
+The script `experiment.sh` is used in the environment to run specific tests.
+To change the application you want to test, change the integer value on `line 33` as described just below:
+- Readers/writers # 1
+- Producers/consumers # 2
+- Philosophers # 3
+- Test and set # 4
 
 #### Plotting
 After retrieving data as text and putting them in files of the form `res_*_inginious.csv`, in the `data/inginious` directory, you can use this command, from the `root` directory, to generate graphs :

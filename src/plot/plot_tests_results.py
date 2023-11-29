@@ -18,7 +18,7 @@ def plot_data(input_dir, output_dir, file_category):
         plt.ylabel('Execution time (seconds)')
         plt.ylim(0)
         plt.grid(True, axis='y')
-
+        
         plt.savefig(f"{output_dir}/{file_category}/{name}_{file_category}.pdf", format='pdf')
 
 if __name__ == "__main__":
