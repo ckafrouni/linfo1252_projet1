@@ -3,7 +3,6 @@
 # TEST PARAMETERS
 # ---------------------------------------------
 DIR_TARGET=$1
-DIR_DATA=$2
 NB_THREADS=(1 2 4 8 16 32)
 NB_TESTS=(5)
 TOTAL_TESTS=$((${#NB_THREADS[@]} * $NB_TESTS))
@@ -12,7 +11,7 @@ INDEX=0
 # ---------------------------------------------
 # RUN TESTS
 # ---------------------------------------------
-CSV_FILE="$DIR_DATA/res_producers-consumers.csv"
+CSV_FILE=$2
 echo "index,thread,time,run_index" > "$CSV_FILE"
 
 for i in "${!NB_THREADS[@]}"; do

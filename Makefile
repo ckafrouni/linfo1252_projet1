@@ -3,33 +3,43 @@
 # ---------------------------------------------
 CC := gcc
 CFLAGS := -g -Wall -Wextra
+LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 
-.PHONY: all clean test
+.PHONY: all clean test zip studsrv
 
-all: $(DIR_TARGET) $(EXECUTABLES)
+all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
+	@echo "Build finished"
 
 $(DIR_TARGET):
-	@mkdir -p $(DIR_TARGET)
+	mkdir $(DIR_TARGET)
+	mkdir $(DIR_TARGET)/obj
+
+$(DIR_TARGET)/obj/%.o: $(SRC_DIR)/lib/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(DIR_TARGET)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(DIR_TARGET)/testing_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
-	@-$(CC) $(CFLAGS) $< -o $@
+	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)
 
-build_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
-
-build_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
-
-build_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
-
-build: $(DIR_TARGET) build_philosophers build_producers_consumers build_readers_writers
+zip: $(DIR_TARGET)
+	zip -r $(DIR_TARGET)/proj1.zip $(SRC_DIR) $(DIR_TESTS) Makefile experiments.sh
 
 # ---------------------------------------------
 # RUN SECTION
 # ---------------------------------------------
-run: build test clean
+studsrv: clean zip
+	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
+	cd $(DIR_TARGET)/proj1 && make && ./experiments.sh
 
 # ---------------------------------------------
 # RUN TEST SECTION
