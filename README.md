@@ -10,7 +10,7 @@ In that regard, the three considered applications are:
 - the problem of producers/consumers.
 
 ## Usage
-
+--------
 ### In local project environment
 
 #### All in one script
@@ -78,7 +78,7 @@ To clean all executables, run the following command:
 ```shell
 make clean
 ```
-
+--------
 ### Inginious
 This following section describes how to use this project to run the tests within `Inginious` environment.
 
