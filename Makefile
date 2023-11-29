@@ -14,10 +14,10 @@ all: $(DIR_TARGET) $(EXECUTABLES)
 	@echo "Build finished"
 
 $(DIR_TARGET):
-	@mkdir -p $(DIR_TARGET)
+	mkdir $(DIR_TARGET)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
-	@-$(CC) $(CFLAGS) $< -o $@
+	-$(CC) $(CFLAGS) $< -o $@
 
 zip: $(DIR_TARGET)
 	zip -r $(DIR_TARGET)/proj1.zip $(SRC_DIR) $(DIR_TESTS) Makefile experiments.sh
@@ -25,7 +25,7 @@ zip: $(DIR_TARGET)
 # ---------------------------------------------
 # RUN SECTION
 # ---------------------------------------------
-studsrc: clean zip
+studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
 	cd $(DIR_TARGET)/proj1 && make && ./experiments.sh
 

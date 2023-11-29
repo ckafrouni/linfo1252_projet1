@@ -2,7 +2,22 @@
 # ---------------------------------------------
 # SET TEST ENVIRONMENT
 # ---------------------------------------------
-# echo -e "\n\e[32m==========================\nSetup Environment\n==========================\e[0m"
+
+# make
+
+# check if target directory exists
+if [ ! -d "target" ]; then
+    echo -e "\e[31mError: target directory not found. Please compile the project first.\e[0m"
+    exit 1
+fi
+
+# check if target directory is empty
+if [ ! "$(ls -A target)" ]; then
+    echo -e "\e[31mError: target directory is empty. Please compile the project first.\e[0m"
+    exit 1
+fi
+
+echo -e "\n\e[32m==========================\nSetup Environment\n==========================\e[0m"
 PROJECT_DIR=$(pwd)
 DIR_TARGET=$PROJECT_DIR'/target'
 DIR_TESTS=$PROJECT_DIR'/src/test'
