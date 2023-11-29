@@ -29,18 +29,18 @@ python3 -m pip install --user seaborn > /dev/null 2>&1
 # ---------------------------------------------
 # RUN TESTS PRODUCERS/CONSUMERS
 # ---------------------------------------------
-echo -e "\n\e[32m==========================\nProducers/consumers tests\n==========================\e[0m"
-make -s build_producers_consumers &
-sleep 2s
-bash $DIR_TESTS/perf_producers-consumers.sh $DIR_TARGET $DIR_DATA
+# echo -e "\n\e[32m==========================\nProducers/consumers tests\n==========================\e[0m"
+# make -s build_producers_consumers &
+# sleep 2s
+# bash $DIR_TESTS/perf_producers-consumers.sh $DIR_TARGET $DIR_DATA
 
 # ---------------------------------------------
 # RUN TESTS READERS/WRITERS
 # ---------------------------------------------
-# echo -e "\n\e[32m==========================\nReaders/writers tests\n==========================\e[0m"
-# make -s build_readers_writers &
-# sleep 2s
-# bash $DIR_TESTS/perf_readers-writers.sh $DIR_TARGET $DIR_DATA
+echo -e "\n\e[32m==========================\nReaders/writers tests\n==========================\e[0m"
+make -s build_readers_writers &
+sleep 2s
+bash $DIR_TESTS/perf_readers-writers.sh $DIR_TARGET $DIR_DATA
 
 # ---------------------------------------------
 # CREATE PLOTS ON RESULTS
