@@ -21,7 +21,7 @@ for i in "${!NB_THREADS[@]}"; do
 
     for k in $(seq 1 $NB_TESTS); do
 
-        echo "[Test $((i + 1)) run $k/$NB_TESTS]($((INDEX + 1))/$TOTAL_TESTS)"
+        echo "[Run $k/$NB_TESTS of test $((i + 1))]($((INDEX + 1))/$TOTAL_TESTS)"
 
         ELAPSED_TIME=$( TIMEFORMAT='%R'; { time $DIR_TARGET/philosophers $THREAD ;} 2>&1)
         echo "$ELAPSED_TIME"
