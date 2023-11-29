@@ -11,6 +11,7 @@ EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 .PHONY: all clean test
 
 all: $(DIR_TARGET) $(EXECUTABLES)
+	@echo "Build finished"
 
 $(DIR_TARGET):
 	@mkdir -p $(DIR_TARGET)
@@ -18,18 +19,15 @@ $(DIR_TARGET):
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
 	@-$(CC) $(CFLAGS) $< -o $@
 
-build_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
-
-build_producers_consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
-
-build_readers_writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
-
-build: $(DIR_TARGET) build_philosophers build_producers_consumers build_readers_writers
+zip: $(DIR_TARGET)
+	zip -r $(DIR_TARGET)/proj1.zip $(SRC_DIR) $(DIR_TESTS) Makefile experiments.sh
 
 # ---------------------------------------------
 # RUN SECTION
 # ---------------------------------------------
-run: build test clean
+studsrc: clean zip
+	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
+	cd $(DIR_TARGET)/proj1 && make && ./experiments.sh
 
 # ---------------------------------------------
 # RUN TEST SECTION
