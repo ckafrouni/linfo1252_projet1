@@ -12,9 +12,7 @@ In that regard, the three considered applications are:
 ## Usage
 This section explains how to use this project.
 
-### In local project environment
-
-#### All in one script
+### All in one script
 A script, `run.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
 
 It can be run directly from the `root` directory, using this command:
@@ -28,11 +26,11 @@ After the run, performs a `make clean`.
 ```shell
 make run
 ```
-
-#### Actions on specific targets
+--------
+### Actions on specific targets
 Using the make file, you can perform the same actions separetely.
 
-##### Building
+#### Building
 You can build all applications using the following command:
 ```shell
 make
@@ -55,7 +53,7 @@ make build_readers-writers
 make build_test-and-set
 ```
 
-##### Testing
+#### Testing
 You can test the performance of the execution of all applications using the following command:
 ```shell
 make test
@@ -74,16 +72,16 @@ make test_producers_consumers
 make test_readers_writers
 ```
 
-##### Cleaning
+#### Cleaning
 To clean all executables, run the following command:
 ```shell
 make clean
 ```
---------
-### Inginious
+
+## Inginious
 This following section describes how to use this project to run the tests within `Inginious` environment.
 
-#### Running tests
+### Running tests
 The script `experiment.sh` is used in the environment to run specific tests.
 To change the application you want to test, change the integer value on `line 33` as described just below:
 - Readers/writers is `1`
@@ -91,7 +89,7 @@ To change the application you want to test, change the integer value on `line 33
 - Philosophers is `3`
 - Test and set is `4`
 
-#### Plotting
+### Plotting
 After retrieving data as text and putting them in files of the form `res_*_inginious.csv`, in the `data/inginious` directory, you can use this command, from the `root` directory, to generate graphs :
 ```shell
 python3 ./src/plot/plot_tests_results.py ./data ./plots inginious
