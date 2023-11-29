@@ -7,7 +7,7 @@ import argparse
 def plot_producers_consumers_data(input_dir, output_dir):  
     data = pd.read_csv(f"{input_dir}/res_readers-writers.csv")
 
-    sns.pointplot(data=data, x="thread", y="time", errorbar='sd')
+    sns.boxplot(data=data, x="thread", y="time", errorbar='sd')
 
     plt.title('Time to process producers/consumers application by equal number of threads.')
     plt.xlabel('Number of treads')

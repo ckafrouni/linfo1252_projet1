@@ -76,10 +76,10 @@ make clean
 ## TODO
 
 - [ ] readers/writers was modified to unblock the code, but why is the code from previous TP not valid ?
-- [ ] why would producers/consumers fail and block for values `2 4` or `4 2` ?
-- [ ] modify `rand()` in producers/consumers to prevent overflow and get good results.
-- [ ] what is the use of `make test` since we need `experiments.sh` ?
-- [ ] should we use `barplot` instead of `lineplot` ?
+- [X] why would producers/consumers fail and block for values `2 4` or `4 2` ?
+- [X] modify `rand()` in producers/consumers to prevent overflow and get good results.
+- [X] what is the use of `make test` since we need `experiments.sh` ?
+- [X] should we use `barplot` instead of `lineplot` ?
 
 ## Authors
 @Bousmar Cyril (https://forge.uclouvain.be/CyrilBousmar)

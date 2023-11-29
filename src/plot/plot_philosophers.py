@@ -7,7 +7,7 @@ import argparse
 def plot_philosophers_data(input_dir, output_dir):  
     data = pd.read_csv(f"{input_dir}/res_philosophers.csv")
 
-    sns.pointplot(data=data, x="thread", y="time", errorbar='sd')
+    sns.boxplot(data=data, x="thread", y="time", errorbar='sd')
 
     plt.title('Time to process philosophers application by number of threads.')
     plt.xlabel('Number of treads')

@@ -1,5 +1,61 @@
 index,thread,time,run_index
-0,2,1.308,0
-1,2,1.533,1
-2,2,1.478,2
-3,2,1.615,3
+0,2,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+1,2,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+2,2,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+3,2,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+4,2,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4
+5,4,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+6,4,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+7,4,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+8,4,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+9,4,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4
+10,8,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+11,8,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+12,8,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+13,8,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+14,8,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4
+15,16,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+16,16,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+17,16,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+18,16,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+19,16,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4
+20,32,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+21,32,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+22,32,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+23,32,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+24,32,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4
+25,64,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,0
+26,64,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,1
+27,64,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,2
+28,64,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,3
+29,64,./src/test/perf_philosophers.sh: line 26: ./src/main/target/philosophers: No such file or directory
+0.001,4

@@ -39,9 +39,7 @@ int produce_item(void)
 {
     for (int i = 0; i < N_CYCLES_SIM; i++)
         ;
-    srand(time(NULL));
-    long diff = (long)INT_MAX - (long)INT_MIN;
-    return (int)rand() % (diff + 1) + INT_MIN;
+    return rand();
 }
 
 void consume_item(int item)
@@ -80,9 +78,9 @@ int remove_item(void)
 
 void *producer(void * arg)
 {
-    int *n_producers = (int *)arg;
+    int *n_cycles = (int *)arg;
     int item;
-    for (int i = 0; i < (N_CYCLES / (*n_producers)); i++)
+    for (int i = 0; i < *n_cycles; i++)
     {
         item = produce_item();
         sem_wait(&empty);
@@ -98,9 +96,9 @@ void *producer(void * arg)
 
 void *consumer(void * arg)
 {
-    int *n_consumers = (int *)arg;
+    int *n_cycles = (int *)arg;
     int item;
-    for (int i = 0; i < (N_CYCLES / (*n_consumers)); i++)
+    for (int i = 0; i < *n_cycles; i++)
     {
         sem_wait(&full);
         pthread_mutex_lock(&mutex);
@@ -137,25 +135,38 @@ int main(int argc, char *argv[])
     pthread_t producers[n_producers];
     pthread_t consumers[n_consumers];
 
-    for (int i = 0; i < n_producers; i++)
-    {
-        pthread_create(&producers[i], NULL, producer, &n_producers);
-    }
+    int rest_consumer = N_CYCLES % n_consumers;
+    int rest_producer = N_CYCLES % n_producers;
 
-    for (int i = 0; i < n_consumers; i++)
+    int n_cycles_cons = (N_CYCLES/n_consumers);
+    for (int i = 0; i < (n_consumers - 1); i++)
     {
-        pthread_create(&consumers[i], NULL, consumer, &n_consumers);
+        pthread_create(&consumers[i], NULL, consumer, &n_cycles_cons);
     }
+    int n_cycles_cons_rest = n_cycles_cons + rest_consumer;
+
+    pthread_create(&consumers[n_consumers - 1], NULL, consumer, &n_cycles_cons_rest);
+
+
+    int n_cycles_prod = (N_CYCLES/n_producers);
+    for (int i = 0; i < (n_producers - 1); i++)
+    {
+        pthread_create(&producers[i], NULL, producer, &n_cycles_prod);
+    }
+    int n_cycles_prod_rest = n_cycles_prod + rest_producer;
+    pthread_create(&producers[n_producers - 1], NULL, producer, &n_cycles_prod_rest);
 
     for (int i = 0; i < n_producers; i++)
     {
         pthread_join(producers[i], NULL);
     }
 
+
     for (int i = 0; i < n_consumers; i++)
     {
         pthread_join(consumers[i], NULL);
     }
+
 
     pthread_mutex_destroy(&mutex);
     sem_destroy(&empty);
