@@ -7,15 +7,26 @@ LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 
 .PHONY: all clean test zip studsrv
 
-all: $(DIR_TARGET) $(EXECUTABLES)
+all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 	@echo "Build finished"
 
 $(DIR_TARGET):
 	mkdir $(DIR_TARGET)
+	mkdir $(DIR_TARGET)/obj
+
+$(DIR_TARGET)/obj/%.o: $(SRC_DIR)/lib/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(DIR_TARGET)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(DIR_TARGET)/testing_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
 	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)
