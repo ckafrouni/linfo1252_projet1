@@ -3,12 +3,13 @@
 # ---------------------------------------------
 CC := gcc
 CFLAGS := -g -Wall -Wextra
+LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 
-.PHONY: all clean test
+.PHONY: all clean test zip studsrv
 
 all: $(DIR_TARGET) $(EXECUTABLES)
 	@echo "Build finished"
@@ -17,7 +18,7 @@ $(DIR_TARGET):
 	mkdir $(DIR_TARGET)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
-	-$(CC) $(CFLAGS) $< -o $@
+	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)
 
 zip: $(DIR_TARGET)
 	zip -r $(DIR_TARGET)/proj1.zip $(SRC_DIR) $(DIR_TESTS) Makefile experiments.sh
