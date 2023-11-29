@@ -86,10 +86,10 @@ This following section describes how to use this project to run the tests within
 #### Running tests
 The script `experiment.sh` is used in the environment to run specific tests.
 To change the application you want to test, change the integer value on `line 33` as described just below:
-- Readers/writers # 1
-- Producers/consumers # 2
-- Philosophers # 3
-- Test and set # 4
+- Readers/writers is `1`
+- Producers/consumers is `2`
+- Philosophers is `3`
+- Test and set is `4`
 
 #### Plotting
 After retrieving data as text and putting them in files of the form `res_*_inginious.csv`, in the `data/inginious` directory, you can use this command, from the `root` directory, to generate graphs :
