@@ -23,8 +23,6 @@ void *thread_function(void *arg)
         critical_section();
         spinlock_unlock(&lock);
     }
-    printf("Thread %ld finished\n", pthread_self());
-
     return NULL;
 }
 

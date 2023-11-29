@@ -15,6 +15,7 @@ EXPERIMENTS_NAMES=(
     "Readers/writers tests"     # 1
     "Producers/consumers tests" # 2
     "Philosophers tests"        # 3
+    "Test and set tests"        # 4
 
 )
 
@@ -22,6 +23,7 @@ EXPERIMENTS_CMDS=(
     "$DIR_TESTS/perf_readers-writers.sh $DIR_TARGET $CSV"
     "$DIR_TESTS/perf_producers-consumers.sh $DIR_TARGET $CSV"
     "$DIR_TESTS/perf_philosophers.sh $DIR_TARGET $CSV"
+    "$DIR_TESTS/perf_test-and-set.sh $DIR_TARGET $CSV"
 )
 
 # ---------------------------------------------

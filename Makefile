@@ -31,6 +31,14 @@ $(DIR_TARGET)/testing_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGE
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
 	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)
 
+build_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
+
+build_producers-consumers: $(DIR_TARGET) $(DIR_TARGET)/producers_consumers
+
+build_readers-writers: $(DIR_TARGET) $(DIR_TARGET)/readers_writers
+
+build_test-and-set: $(DIR_TARGET) $(DIR_TARGET)/testing_test_and_set
+
 zip: $(DIR_TARGET)
 	zip -r $(DIR_TARGET)/proj1.zip $(SRC_DIR) $(DIR_TESTS) Makefile experiments.sh
 

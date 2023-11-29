@@ -11,12 +11,14 @@ In that regard, the three considered applications are:
 
 ## Usage
 
-### All in one script
-A script, `experiments.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
+### In local project environment
+
+#### All in one script
+A script, `run.sh` allows to compile the `.c` code and run all the tests. This will produce graphs on the performance of the code.
 
 It can be run directly from the `root` directory, using this command:
 ```shell
-bash experiments.sh
+bash run.sh
 ```
 
 After the run, performs a `make clean`.
@@ -26,10 +28,10 @@ After the run, performs a `make clean`.
 make run
 ```
 
-### Actions on specific targets
+#### Actions on specific targets
 Using the make file, you can perform the same actions separetely.
 
-#### Building
+##### Building
 You can build all applications using the following command:
 ```shell
 make
@@ -41,14 +43,18 @@ make build_philosophers
 ```
 
 ```shell
-make build_producers_consumers
+make build_producers-consumers
 ```
 
 ```shell
-make build_readers_writers
+make build_readers-writers
 ```
 
-#### Testing
+```shell
+make build_test-and-set
+```
+
+##### Testing
 You can test the performance of the execution of all applications using the following command:
 ```shell
 make test
@@ -67,10 +73,22 @@ make test_producers_consumers
 make test_readers_writers
 ```
 
-#### Cleaning
+##### Cleaning
 To clean all executables, run the following command:
 ```shell
 make clean
+```
+
+### Inginious
+This following section describes how to use this project to run the tests within `Inginious` environment.
+
+#### Running tests
+The script `experiment.sh` is used in the environment to run specific tests. Use the prompted instructions to know how to use it.
+
+#### Plotting
+After retrieving data as text and putting them in files of the form `res_*_inginious.csv`, in the `data/inginious` directory, you can use this command, from the `root` directory, to generate graphs :
+```shell
+python3 ./src/plot/plot_tests_results.py ./data ./plots inginious
 ```
 
 ## TODO
