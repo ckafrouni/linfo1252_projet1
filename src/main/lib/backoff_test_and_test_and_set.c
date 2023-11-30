@@ -9,6 +9,7 @@
 void lock(spinlock_t *mut)
 {
     // TODO backoff-test-and-test-and-set lock
+    // TODO This is actually only a backoff-test-and-set lock
 
     // printf("backoff-test-and-test-and-set lock\n");
 

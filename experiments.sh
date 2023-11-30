@@ -16,8 +16,8 @@ EXPERIMENTS_NAMES=(
     "Producers/consumers tests"           # 1 - done
     "Philosophers tests"                  # 2 - done
     "Test-and-set tests"                  # 3 - done
-    "Test-and-test-and-set tests"         # 4
-    "Backoff-test-and-test-and-set tests" # 5
+    "Test-and-test-and-set tests"         # 4 - done
+    "Backoff-test-and-test-and-set tests" # 5 - done (This is actually backoff-test-and-set not backoff-test-and-test-and-set)
 )
 
 EXPERIMENTS_CMDS=(
@@ -33,7 +33,7 @@ EXPERIMENTS_CMDS=(
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=4
+EXPERIMENT=5
 
 echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$EXPERIMENT]}\n==========================\e[0m"
 bash ${EXPERIMENTS_CMDS[$EXPERIMENT]}
