@@ -15,7 +15,7 @@ EXPERIMENTS_NAMES=(
     "Readers/writers tests"               # 0 - done
     "Producers/consumers tests"           # 1 - done
     "Philosophers tests"                  # 2 - done
-    "Test-and-set tests"                  # 3
+    "Test-and-set tests"                  # 3 - done
     "Test-and-test-and-set tests"         # 4
     "Backoff-test-and-test-and-set tests" # 5
 )
@@ -33,10 +33,12 @@ EXPERIMENTS_CMDS=(
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=3
+EXPERIMENT=4
 
 echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$EXPERIMENT]}\n==========================\e[0m"
 bash ${EXPERIMENTS_CMDS[$EXPERIMENT]}
 echo -e "\e[32m==========================\e[0m\n"
+
+echo -e "\e[32m========================== ${EXPERIMENTS_NAMES[$EXPERIMENT]} ==========================\e[0m\n"
 
 cat $CSV
