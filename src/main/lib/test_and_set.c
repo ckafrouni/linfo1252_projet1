@@ -1,5 +1,14 @@
 #include "lock.h"
 
+/**
+ * This is a test-and-set lock.
+ * 
+ * It uses the xchgl instruction to atomically exchange the value of the lock with 1.
+ * 
+ * This is a very simple lock, that actively waits for the lock to be released.
+ * 
+ * @param mut The spinlock to acquire
+ */
 void lock(spinlock_t *mut)
 {
     int one = 1;
