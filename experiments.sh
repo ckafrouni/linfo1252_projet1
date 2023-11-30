@@ -12,7 +12,7 @@ CSV="$PROJECT_DIR/tmp.csv"
 # EXPERIMENTS
 # ---------------------------------------------
 EXPERIMENTS_NAMES=(
-    "Readers/writers tests"               # 0
+    "Readers/writers tests"               # 0 - done
     "Producers/consumers tests"           # 1 - done
     "Philosophers tests"                  # 2 - done
     "Test-and-set tests"                  # 3
