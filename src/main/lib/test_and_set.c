@@ -7,6 +7,9 @@
  * 
  * This is a very simple lock, that actively waits for the lock to be released.
  * 
+ * It is very inefficient, because it causes a lot of cache invalidation by calling the xchgl instruction.
+ * A possible solution to this problem is the test-and-test-and-set lock.
+ * 
  * @param mut The spinlock to acquire
  */
 void lock(spinlock_t *mut)

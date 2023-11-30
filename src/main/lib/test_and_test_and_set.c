@@ -14,6 +14,8 @@
  * 
  * The higher the number of threads, the more this problem will occur.
  * 
+ * A possible solution to this problem is the backoff-test-and-test-and-set lock.
+ * 
  * @param mut The spinlock to acquire
  */
 void lock(spinlock_t *mut)
