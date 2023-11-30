@@ -12,12 +12,12 @@ CSV="$PROJECT_DIR/tmp.csv"
 # EXPERIMENTS
 # ---------------------------------------------
 EXPERIMENTS_NAMES=(
-    "Readers/writers tests"               # 1 - done
-    "Producers/consumers tests"           # 2
-    "Philosophers tests"                  # 3
-    "Test-and-set tests"                  # 4
-    "Test-and-test-and-set tests"         # 5
-    "Backoff-test-and-test-and-set tests" # 6
+    "Readers/writers tests"               # 0
+    "Producers/consumers tests"           # 1 - done
+    "Philosophers tests"                  # 2 - done
+    "Test-and-set tests"                  # 3
+    "Test-and-test-and-set tests"         # 4
+    "Backoff-test-and-test-and-set tests" # 5
 )
 
 EXPERIMENTS_CMDS=(
@@ -31,7 +31,7 @@ EXPERIMENTS_CMDS=(
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=2
+EXPERIMENT=0
 
 echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$EXPERIMENT]}\n==========================\e[0m"
 bash ${EXPERIMENTS_CMDS[$EXPERIMENT]}
