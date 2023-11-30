@@ -22,7 +22,7 @@ for i in "${!NB_THREADS[@]}"; do
 
         echo "[Run $k/$NB_TESTS of test $((i + 1))]($((INDEX + 1))/$TOTAL_TESTS)"
 
-        ELAPSED_TIME=$( TIMEFORMAT='%R'; { time $DIR_TARGET/lock_test_and_set $THREAD ;} 2>&1)
+        ELAPSED_TIME=$( TIMEFORMAT='%R'; { time $DIR_TARGET/lock_backoff_test_and_test_and_set $THREAD ;} 2>&1)
         echo "$ELAPSED_TIME"
 
         echo "$INDEX,$THREAD,$ELAPSED_TIME,$((k - 1))" >> "$CSV_FILE"

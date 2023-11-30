@@ -25,13 +25,15 @@ EXPERIMENTS_CMDS=(
     "$DIR_TESTS/perf_producers-consumers.sh $DIR_TARGET $CSV"
     "$DIR_TESTS/perf_philosophers.sh $DIR_TARGET $CSV"
     "$DIR_TESTS/perf_test-and-set.sh $DIR_TARGET $CSV"
+    "$DIR_TESTS/perf_test_and_test_and_set.sh $DIR_TARGET $CSV"
+    "$DIR_TESTS/perf_backoff_test_and_test_and_set.sh $DIR_TARGET $CSV"
 )
 
 # ---------------------------------------------
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=0
+EXPERIMENT=3
 
 echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$EXPERIMENT]}\n==========================\e[0m"
 bash ${EXPERIMENTS_CMDS[$EXPERIMENT]}
