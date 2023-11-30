@@ -1,4 +1,5 @@
 #include "lock.h"
+#include <stdio.h>
 
 /**
  * This is a test-and-set lock.
@@ -14,6 +15,7 @@
  */
 void lock(spinlock_t *mut)
 {
+    // printf("test-and-set lock\n");
     int one = 1;
     asm volatile(
         "loop: \n\t"

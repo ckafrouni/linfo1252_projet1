@@ -7,10 +7,12 @@ LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
-OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o
+OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
+EXECUTABLES := $(filter-out $(DIR_TARGET)/lock,$(EXECUTABLES))
+EXECUTABLES += $(DIR_TARGET)/lock_test_and_set $(DIR_TARGET)/lock_test_and_test_and_set $(DIR_TARGET)/lock_backoff_test_and_test_and_set
 
-.PHONY: all clean test zip studsrv
+.PHONY: all clean test zip studsrv build
 
 all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 	@echo "Build finished"
@@ -22,9 +24,14 @@ $(DIR_TARGET):
 $(DIR_TARGET)/obj/%.o: $(SRC_DIR)/lib/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/lock: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o
-	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c -o $@_test_and_set
-	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@_test_and_test_and_set
+$(DIR_TARGET)/lock_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c
+	-$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
+
+$(DIR_TARGET)/lock_test_and_test_and_set: $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c
+	-$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
+
+$(DIR_TARGET)/lock_backoff_test_and_test_and_set: $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c
+	-$(CC) $(CFLAGS) $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
 	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)
