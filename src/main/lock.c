@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "lib/test_and_set.h"
+#include "lib/lock.h"
 
 #define TOTAL_CYCLES 6400
 
-spinlock_t lock;
+spinlock_t mut;
 
 void critical_section()
 {
@@ -19,9 +19,9 @@ void *thread_function(void *arg)
     int n = *(int *)arg;
     for (int i = 0; i < TOTAL_CYCLES / n; i++)
     {
-        spinlock_lock(&lock);
+        lock(&mut);
         critical_section();
-        spinlock_unlock(&lock);
+        unlock(&mut);
     }
     return NULL;
 }

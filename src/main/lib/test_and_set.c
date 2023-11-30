@@ -1,23 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
+#include "lock.h"
 
-#include "test_and_set.h"
-
-void spinlock_lock(spinlock_t *lock)
+void lock(spinlock_t *mut)
 {
     int one = 1;
     asm volatile(
         "loop: \n\t"
-        "xchgl %0, %1 \n\t" // Exchange the lock value with register %0 (one)
-        "testl %0, %0 \n\t" // Test if the old value was 0 (the lock was free)
-        "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (lock was not free)
-        : "+r"(one), "+m"(lock->lock));
+        "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
+        "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
+        "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        : "+r"(one), "+m"(mut->mut));
 }
 
-void spinlock_unlock(spinlock_t *lock)
+void unlock(spinlock_t *mut)
 {
     asm volatile(
-        "movl $0, %0 \n\t" // Set the lock to 0
-        : "=m"(lock->lock));
+        "movl $0, %0 \n\t" // Set the mut to 0
+        : "=m"(mut->mut));
 }

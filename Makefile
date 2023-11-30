@@ -7,7 +7,7 @@ LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
-OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
+OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
 
 .PHONY: all clean test zip studsrv
@@ -22,11 +22,9 @@ $(DIR_TARGET):
 $(DIR_TARGET)/obj/%.o: $(SRC_DIR)/lib/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
-
-$(DIR_TARGET)/testing_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/testing_test_and_set.o
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+$(DIR_TARGET)/lock: $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o
+	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c -o $@_test_and_set
+	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@_test_and_test_and_set
 
 $(DIR_TARGET)/%: $(SRC_DIR)/%.c
 	-$(CC) $(CFLAGS) $< -o $@ $(LIBS)

@@ -3,10 +3,10 @@
 
 typedef struct
 {
-    volatile int lock;
+    volatile int mut;
 } spinlock_t;
 
-void spinlock_lock(spinlock_t *lock);
-void spinlock_unlock(spinlock_t *lock);
+void lock(spinlock_t *mut);
+void unlock(spinlock_t *mut);
 
 #endif // TEST_AND_SET_H
