@@ -21,10 +21,10 @@ python3 -m pip install --user seaborn > /dev/null 2>&1
 # ---------------------------------------------
 # RUN TESTS FOR PHILOSOPHERS
 # ---------------------------------------------
-echo -e "\n\e[32m==========================\nPhilosophers tests\n==========================\e[0m"
-make -s build_philosophers &
-sleep 2s
-bash $DIR_TESTS/perf_philosophers.sh $DIR_TARGET $DIR_DATA/res_philosophers_local.csv
+# echo -e "\n\e[32m==========================\nPhilosophers tests\n==========================\e[0m"
+# make -s build_philosophers &
+# sleep 2s
+# bash $DIR_TESTS/perf_philosophers.sh $DIR_TARGET $DIR_DATA/res_philosophers_local.csv
 
 # ---------------------------------------------
 # RUN TESTS FOR PRODUCERS/CONSUMERS
@@ -32,31 +32,31 @@ bash $DIR_TESTS/perf_philosophers.sh $DIR_TARGET $DIR_DATA/res_philosophers_loca
 echo -e "\n\e[32m==========================\nProducers/consumers tests\n==========================\e[0m"
 make -s build_producers-consumers &
 sleep 2s
-bash $DIR_TESTS/perf_producers-consumers.sh $DIR_TARGET $DIR_DATA/res_producers-consumers_local.csv
+bash $DIR_TESTS/perf.sh $DIR_TARGET/default_lib/producers-consumers $DIR_DATA/res_producers-consumers_standard.csv
 
 # ---------------------------------------------
 # RUN TESTS FOR READERS/WRITERS
 # ---------------------------------------------
-echo -e "\n\e[32m==========================\nReaders/writers tests\n==========================\e[0m"
-make -s build_readers-writers &
-sleep 2s
-bash $DIR_TESTS/perf_readers-writers.sh $DIR_TARGET $DIR_DATA/res_readers-writers_local.csv
+# echo -e "\n\e[32m==========================\nReaders/writers tests\n==========================\e[0m"
+# make -s build_readers-writers &
+# sleep 2s
+# bash $DIR_TESTS/perf_readers-writers.sh $DIR_TARGET $DIR_DATA/res_readers-writers_local.csv
 
 # ---------------------------------------------
 # RUN TESTS FOR TEST AND SET
 # ---------------------------------------------
-echo -e "\n\e[32m==========================\nTests&set tests\n==========================\e[0m"
-make -s build_test-and-set &
-sleep 2s
-bash $DIR_TESTS/perf_test-and-set.sh $DIR_TARGET $DIR_DATA/res_test-and-set_local.csv
+# echo -e "\n\e[32m==========================\nTests&set tests\n==========================\e[0m"
+# make -s build_test-and-set &
+# sleep 2s
+# bash $DIR_TESTS/perf_test-and-set.sh $DIR_TARGET $DIR_DATA/res_test-and-set_local.csv
 
 # ---------------------------------------------
 # CREATE PLOTS ON RESULTS
 # ---------------------------------------------
-echo -e "\n\e[32m==========================\nPlot results\n==========================\e[0m"
-echo "Plotting..."
-python3 $DIR_PLOTS/plot_tests_results.py $DIR_DATA $DIR_GRAPHS local
-echo "Done"
+# echo -e "\n\e[32m==========================\nPlot results\n==========================\e[0m"
+# echo "Plotting..."
+# python3 $DIR_PLOTS/plot_tests_results.py $DIR_DATA $DIR_GRAPHS local
+# echo "Done"
 
 # ---------------------------------------------
 # CLEAR TEMPORARY FILES
