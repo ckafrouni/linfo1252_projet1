@@ -12,7 +12,7 @@ def plot_data(input_dir, output_dir, file_category):
         data = pd.read_csv(file)
         name = file.split('_')[-2].split('.')[0]
         plt.figure(figsize=(8, 6))
-        sns.barplot(data=data, x="thread", y="time", errorbar='sd')
+        sns.barplot(data=data, x="thread", y="time", hue="build_type", errorbar='sd')
         plt.title(f"Time to process {name} application by number of threads.")
         plt.xlabel('Number of treads')
         plt.ylabel('Execution time (seconds)')

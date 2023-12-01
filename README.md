@@ -90,9 +90,17 @@ To change the application you want to test, change the integer value on `line 33
 - Test and set is `4`
 
 ### Plotting
-After retrieving data as text and putting them in files of the form `res_*_inginious.csv`, in the `data/inginious` directory, you can use this command, from the `root` directory, to generate graphs :
+After retrieving data as text and putting them in files of the form `res_*_X_.csv`, in the `data/inginious` directory. The `X` is the type of build used for with the application and the `*` is the application type in itself.
+
+After that, you can merge all your data from the same type of application using this command in the `root` directory:
 ```shell
-python3 ./src/plot/plot_tests_results.py ./data ./plots inginious
+python3 ./src/plot/merge_results.py data/inginious x
+```
+    ,where `x` is the type of application.
+    
+Then, you can use this command, from the `root` directory, to generate graphs :
+```shell
+python3 ./src/plot/plot_tests_results.py data plots inginious
 ```
 
 ## TODO
