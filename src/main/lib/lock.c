@@ -8,9 +8,9 @@
 
 void lock(spinlock_t *mut)
 {
-#ifdef DEBUG
-    printf("test-and-set lock\n");
-#endif
+    #ifdef DEBUG
+    printf("Enter in test-and-set lock\n");
+    #endif
     int one = 1;
     asm volatile(
         "1: \n\t"
@@ -18,6 +18,9 @@ void lock(spinlock_t *mut)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
         "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
+    #ifdef DEBUG
+    printf("Exit from test-and-set lock\n");
+    #endif
 }
 
 

@@ -51,12 +51,22 @@ EXPERIMENTS_CMDS=(
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=(4 5 6 7 8 9 10 11 12 13 14)
-# EXPERIMENT=(4 8 0)
+EXPERIMENTS=(4 5 6 7 8 9 10 11 12 13 14)
 
-for i in "${EXPERIMENT[@]}"; do
+# standard: 0 4 8
+# EXPERIMENTS=(0 4 8) # 0 takes a long time (+- 190 sec), total time: 200 seconds
+# lock: 12 13 14
+# EXPERIMENTS=(12 13 14) # takes around 2 seconds
+# philosophers: 0 1 2 3
+# EXPERIMENTS=(1 2 3)
+
+for i in "${EXPERIMENTS[@]}"; do
     echo -e "\e[32m========================== #$i ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m"
-    bash ${EXPERIMENTS_CMDS[$i]} > /dev/null 2>&1
+    if [ -z "${DEBUG}" ]; then
+        bash ${EXPERIMENTS_CMDS[$i]} > /dev/null 2>&1
+    else
+        bash ${EXPERIMENTS_CMDS[$i]}
+    fi
     cat $CSV
     echo -e "\e[32m========================== ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m\n"
 done
