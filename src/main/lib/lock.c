@@ -16,10 +16,10 @@ void lock(spinlock_t *mut)
 #endif
     int one = 1;
     asm volatile(
-        "loop: \n\t"
+        "1: \n\t"
         "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
 }
 
@@ -45,15 +45,15 @@ void lock(spinlock_t *mut)
 
     int one = 1;
     asm volatile(
-        "loop: \n\t"
+        "1: \n\t"
 
         "movl %1, %0 \n\t"  // Move the value of the mut to register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
 
         "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
 }
 
@@ -87,14 +87,14 @@ void lock(spinlock_t *mut)
 
     while (expected != 0)
     {
-        while (mut->flag != 0)
-            ;
+        // while (mut->flag != 0)
+        //     ;
 
         asm volatile(
-            "loop: \n\t"
+            "1: \n\t"
             "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
             "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-            "jnz loop \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+            "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
             : "+r"(expected), "+m"(mut->flag));
 
         if (expected != 0)
