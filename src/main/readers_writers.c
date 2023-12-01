@@ -135,29 +135,11 @@ int main(int argc, char *argv[])
         pthread_join(writers[i], NULL);
     }
 
-    if (sem_destroy(&sem_reader) != 0)
-    {
-        fprintf(stderr, "Error destroying sem_reader\n");
-    }
-
-    if (sem_destroy(&sem_writer) != 0)
-    {
-        fprintf(stderr, "Error destroying sem_writer\n");
-    }
-
-    if (MUTEX_DESTROY(&mutex_read) != 0)
-    {
-        fprintf(stderr, "Error destroying mutex_read\n");
-    }
-
-    if (MUTEX_DESTROY(&mutex_write) != 0)
-    {
-        fprintf(stderr, "Error destroying mutex_write\n");
-    }
-
-    if (MUTEX_DESTROY(&mutex_writer_priority) != 0)
-    {
-        fprintf(stderr, "Error destroying mutex_writer_priority\n");
-    }
+    sem_destroy(&sem_reader);
+    sem_destroy(&sem_writer);
+    MUTEX_DESTROY(&mutex_read);
+    MUTEX_DESTROY(&mutex_write);
+    MUTEX_DESTROY(&mutex_writer_priority);
+    
     return EXIT_SUCCESS;
 }

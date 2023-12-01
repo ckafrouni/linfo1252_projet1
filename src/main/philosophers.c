@@ -99,10 +99,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n_philosophers; i++)
     {
-        if (MUTEX_INIT(&sticks[i]) != 0)
-        {
-            fprintf(stderr, "Error creating mutex %d\n", i);
-        }
+        MUTEX_INIT(&sticks[i]);
     }
 
     for (int i = 0; i < n_philosophers; i++)
@@ -113,27 +110,17 @@ int main(int argc, char *argv[])
             .sticks = sticks,
         };
 
-        if (pthread_create(&philosophers[i], NULL, philosopher, &p_args[i]) != 0)
-        {
-            fprintf(stderr, "Error creating philosopher thread %d\n", i);
-        }
+        pthread_create(&philosophers[i], NULL, philosopher, &p_args[i]);
     }
 
     for (int i = 0; i < n_philosophers; i++)
     {
-        if (pthread_join(philosophers[i], NULL) != 0)
-        {
-            fprintf(stderr, "Error joining philosopher thread %d\n", i);
-        }
+        pthread_join(philosophers[i], NULL);
     }
 
     for (int i = 0; i < n_philosophers; i++)
     {
-        int ret = MUTEX_DESTROY(&sticks[i]);
-        if (ret != 0)
-        {
-            fprintf(stderr, "Error destroying mutex %d: %s\n", i, strerror(ret));
-        }
+        MUTEX_DESTROY(&sticks[i]);
     }
 
     return EXIT_SUCCESS;

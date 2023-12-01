@@ -1,6 +1,6 @@
 #include "sem.h"
 
-void sem_init(sem_t *sem, int pshared, int value)
+void sem_init(sem_t *sem, int pshared, unsigned int value)
 {
     (void)pshared;
     sem->value = value;
