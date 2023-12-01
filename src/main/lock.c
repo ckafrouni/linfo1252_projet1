@@ -39,20 +39,12 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n_threads; i++)
     {
-        if (pthread_create(&threads[i], NULL, thread_function, &n_threads))
-        {
-            fprintf(stderr, "Error creating thread %d\n", i);
-            return EXIT_FAILURE;
-        }
+        pthread_create(&threads[i], NULL, thread_function, &n_threads);
     }
 
     for (int i = 0; i < n_threads; i++)
     {
-        if (pthread_join(threads[i], NULL))
-        {
-            fprintf(stderr, "Error joining thread %d\n", i);
-            return EXIT_FAILURE;
-        }
+        pthread_join(threads[i], NULL);
     }
 
     return EXIT_SUCCESS;
