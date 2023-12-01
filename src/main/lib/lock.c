@@ -25,6 +25,7 @@ void lock(spinlock_t *mut)
 
 
 #elif TEST_AND_TEST_AND_SET
+#include <stdio.h>
 
 void lock(spinlock_t *mut)
 {

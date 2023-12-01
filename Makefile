@@ -9,7 +9,7 @@ DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 SOURCES := $(filter-out $(SRC_DIR)/lock.c,$(SOURCES))
-OBJECTS = $(DIR_TARGET)/obj/test-and-set.o $(DIR_TARGET)/obj/test-and-test-and-set.o $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o
+OBJECTS = $(DIR_TARGET)/obj/test-and-set.o $(DIR_TARGET)/obj/test-and-test-and-set.o $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o $(DIR_TARGET)/obj/sem.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_standard,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_test-and-set,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_test-and-test-and-set,$(SOURCES))
@@ -30,16 +30,19 @@ $(DIR_TARGET):
 	mkdir -p $(DIR_TARGET)/obj
 
 # Compile lib/lock.c with different flags for different lock implementations objects
-$(DIR_TARGET)/obj/test-and-set.o: $(SRC_DIR)/lib/lock.c
+$(DIR_TARGET)/obj/test-and-set.o: $(SRC_DIR)/lib/lock.c $(SRC_DIR)/lib/lock.h
 	$(CC) -DTEST_AND_SET $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/obj/test-and-test-and-set.o: $(SRC_DIR)/lib/lock.c
+$(DIR_TARGET)/obj/test-and-test-and-set.o: $(SRC_DIR)/lib/lock.c $(SRC_DIR)/lib/lock.h
 	$(CC) -DTEST_AND_TEST_AND_SET $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/obj/backoff-test-and-test-and-set.o: $(SRC_DIR)/lib/lock.c
+$(DIR_TARGET)/obj/backoff-test-and-test-and-set.o: $(SRC_DIR)/lib/lock.c $(SRC_DIR)/lib/lock.h
 	$(CC) -DBACKOFF_TEST_AND_TEST_AND_SET $(CFLAGS) -c $< -o $@ $(LIBS)
 
 # Compile executables of the lock performance test with different flags for different lock implementations
+$(DIR_TARGET)/obj/sem.o: $(SRC_DIR)/lib/sem.c $(SRC_DIR)/lib/sem.h
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
 $(DIR_TARGET)/custom_lib/lock_test-and-set: $(DIR_TARGET)/obj/test-and-set.o $(SRC_DIR)/lock.c
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
@@ -53,13 +56,13 @@ $(DIR_TARGET)/custom_lib/lock_backoff-test-and-test-and-set: $(DIR_TARGET)/obj/b
 $(DIR_TARGET)/%_standard: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/%_test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test-and-set.o
+$(DIR_TARGET)/%_test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test-and-set.o $(DIR_TARGET)/obj/sem.o
 	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $^ -o $@ $(LIBS)
 
-$(DIR_TARGET)/%_test-and-test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test-and-test-and-set.o
+$(DIR_TARGET)/%_test-and-test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test-and-test-and-set.o $(DIR_TARGET)/obj/sem.o
 	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $^ -o $@ $(LIBS)
 
-$(DIR_TARGET)/%_backoff-test-and-test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o
+$(DIR_TARGET)/%_backoff-test-and-test-and-set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o $(DIR_TARGET)/obj/sem.o
 	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $^ -o $@ $(LIBS)
 
 # Targets for building individual executables

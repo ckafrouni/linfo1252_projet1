@@ -48,8 +48,9 @@ void *writer(void *arg)
     {
         MUTEX_LOCK(&mutex_write);
         write_count++;
-        if (write_count == 1)
+        if (write_count == 1) {
             sem_wait(&sem_reader);
+        }
         MUTEX_UNLOCK(&mutex_write);
         
         sem_wait(&sem_writer);

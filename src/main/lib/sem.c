@@ -1,5 +1,6 @@
 #include "sem.h"
 #include "lock.h"
+// #include <stdio.h>
 
 void sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -12,11 +13,11 @@ void sem_wait(sem_t *sem)
 {
     lock(&sem->lock);
     while (sem->value <= 0) {
+        // printf("Waiting for semaphore\n");
         unlock(&sem->lock);
         lock(&sem->lock);
     }
     sem->value--;
-    printf("Leaving sem_wait\n")
     unlock(&sem->lock);
 }
 
@@ -29,5 +30,6 @@ void sem_post(sem_t *sem)
 
 int sem_destroy(sem_t *sem)
 {
+    (void)sem;
     return (0);
 }
