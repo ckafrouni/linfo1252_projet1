@@ -36,7 +36,7 @@ EXPERIMENTS_CMDS=(
 EXPERIMENT=(0 1 3 4 5)
 
 for i in "${!EXPERIMENT[@]}"; do
-    echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$i]}\n==========================\e[0m"
+    echo -e "\e[32m========================== #$i ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m"
     bash ${EXPERIMENTS_CMDS[$i]} > /dev/null 2>&1
     cat $CSV
     echo -e "\e[32m========================== ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m\n"
