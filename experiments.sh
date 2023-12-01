@@ -33,12 +33,15 @@ EXPERIMENTS_CMDS=(
 # RUN EXPERIMENTS
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
-EXPERIMENT=5
+EXPERIMENT=(0 1 3 4 5)
 
-echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$EXPERIMENT]}\n==========================\e[0m"
-bash ${EXPERIMENTS_CMDS[$EXPERIMENT]}
-echo -e "\e[32m==========================\e[0m\n"
+for i in "${!EXPERIMENT[@]}"; do
+    echo -e "\e[32m==========================\n#$EXPERIMENT ${EXPERIMENTS_NAMES[$i]}\n==========================\e[0m"
+    bash ${EXPERIMENTS_CMDS[$i]} > /dev/null 2>&1
+    cat $CSV
+    echo -e "\e[32m========================== ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m\n"
+done
 
-echo -e "\e[32m========================== ${EXPERIMENTS_NAMES[$EXPERIMENT]} ==========================\e[0m\n"
 
-cat $CSV
+
+
