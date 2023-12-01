@@ -73,7 +73,7 @@ build_test-and-set: $(DIR_TARGET) $(DIR_TARGET)/testing_test_and_set
 # ---------------------------------------------
 studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
-	cd $(DIR_TARGET)/proj1 && make && ./experiments.sh
+	cd $(DIR_TARGET)/proj1 && make -j -s && ./experiments.sh
 
 DIR_TESTS := src/test
 DIR_PLOTS := src/plot

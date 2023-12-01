@@ -77,14 +77,8 @@ void *philosopher(void *arg)
 }
 
 int main(int argc, char *argv[])
-{
-    #ifdef CUSTOM_MUTEX_AND_SEMAPHORE
-    printf("Using custom mutex and semaphore\n");
-    #else
-    printf("Using pthread mutex and semaphore\n");
-    #endif
-    
-    if (argc != 2)
+{    
+    if (argc != 2 && argc != 3)
     {
         fprintf(stderr, "Usage: %s <number of philosophers>\n", argv[0]);
         return EXIT_FAILURE;

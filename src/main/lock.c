@@ -28,9 +28,9 @@ void *thread_function(void *arg)
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc != 2 && argc != 3)
     {
-        fprintf(stderr, "Usage: %s <number of threads>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <number of threads> <unused>\n", argv[0]);
         return EXIT_FAILURE;
     }
 

@@ -52,8 +52,9 @@ EXPERIMENTS_CMDS=(
 # ---------------------------------------------
 # CHANGE THIS TO RUN A DIFFERENT EXPERIMENT
 EXPERIMENT=(4 5 6 7 8 9 10 11 12 13 14)
+# EXPERIMENT=(4 8 0)
 
-for i in "${!EXPERIMENT[@]}"; do
+for i in "${EXPERIMENT[@]}"; do
     echo -e "\e[32m========================== #$i ${EXPERIMENTS_NAMES[$i]} ==========================\e[0m"
     bash ${EXPERIMENTS_CMDS[$i]} > /dev/null 2>&1
     cat $CSV
