@@ -1,14 +1,31 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <malloc.h>
-#include <pthread.h>
-#include <semaphore.h>
 #include <limits.h>
+#include <pthread.h>
+
+#ifdef CUSTOM_MUTEX_AND_SEMAPHORE
+#include "./lib/lock.h"
+#include "./lib/sem.h"
+
+#define MUTEX_T spinlock_t
+#define MUTEX_INIT(l) spinlock_init(l)
+#define MUTEX_LOCK(l) lock(l)
+#define MUTEX_UNLOCK(l) unlock(l)
+#define MUTEX_DESTROY(l) spinlock_destroy(l)
+#else
+#include <semaphore.h>
+
+#define MUTEX_T pthread_mutex_t
+#define MUTEX_INIT(l) pthread_mutex_init(l, NULL)
+#define MUTEX_LOCK(l) pthread_mutex_lock(l)
+#define MUTEX_UNLOCK(l) pthread_mutex_unlock(l)
+#define MUTEX_DESTROY(l) pthread_mutex_destroy(l)
+#endif
 
 #define N 8
 #define N_CYCLES 8192
 #define N_CYCLES_SIM 10000
-pthread_mutex_t mutex;
+MUTEX_T mutex;
 sem_t empty;
 sem_t full;
 int buffer[N];
@@ -84,10 +101,10 @@ void *producer(void * arg)
     {
         item = produce_item();
         sem_wait(&empty);
-        pthread_mutex_lock(&mutex);
+        MUTEX_LOCK(&mutex);
         insert_item(item);
         // print_buffer();
-        pthread_mutex_unlock(&mutex);
+        MUTEX_UNLOCK(&mutex);
         sem_post(&full);
     }
 
@@ -101,10 +118,10 @@ void *consumer(void * arg)
     for (int i = 0; i < *n_cycles; i++)
     {
         sem_wait(&full);
-        pthread_mutex_lock(&mutex);
+        MUTEX_LOCK(&mutex);
         item = remove_item();
         // print_buffer();
-        pthread_mutex_unlock(&mutex);
+        MUTEX_UNLOCK(&mutex);
         sem_post(&empty);
         consume_item(item);
     }
@@ -120,7 +137,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    pthread_mutex_init(&mutex, NULL);
+    MUTEX_INIT(&mutex);
     sem_init(&empty, 0, N); // buffer vide
     sem_init(&full, 0, 0);  // buffer vide
 
@@ -168,7 +185,7 @@ int main(int argc, char *argv[])
     }
 
 
-    pthread_mutex_destroy(&mutex);
+    MUTEX_DESTROY(&mutex);
     sem_destroy(&empty);
     sem_destroy(&full);
 

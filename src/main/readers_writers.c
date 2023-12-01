@@ -2,7 +2,26 @@
 #include <stdlib.h>
 
 #include <pthread.h>
+
+#ifdef CUSTOM_MUTEX_AND_SEMAPHORE
+#include "./lib/lock.h"
+#include "./lib/sem.h"
+
+#define MUTEX_T spinlock_t
+#define MUTEX_INIT(l) spinlock_init(l)
+#define MUTEX_LOCK(l) lock(l)
+#define MUTEX_UNLOCK(l) unlock(l)
+#define MUTEX_DESTROY(l) spinlock_destroy(l)
+#else
 #include <semaphore.h>
+
+#define MUTEX_T pthread_mutex_t
+#define MUTEX_INIT(l) pthread_mutex_init(l, NULL)
+#define MUTEX_LOCK(l) pthread_mutex_lock(l)
+#define MUTEX_UNLOCK(l) pthread_mutex_unlock(l)
+#define MUTEX_DESTROY(l) pthread_mutex_destroy(l)
+#endif
+
 
 #define N_CYCLES_WRITERS 640
 #define N_CYCLES_READERS 2560
@@ -10,9 +29,9 @@
 
 sem_t sem_reader;
 sem_t sem_writer;
-pthread_mutex_t mutex_read;
-pthread_mutex_t mutex_write;
-pthread_mutex_t mutex_writer_priority;
+MUTEX_T mutex_read;
+MUTEX_T mutex_write;
+MUTEX_T mutex_writer_priority;
 int read_count = 0;
 int write_count = 0;
 
@@ -27,11 +46,11 @@ void *writer(void *arg)
     (void)arg;
     for (int i = 0; i < N_CYCLES_WRITERS; i++)
     {
-        pthread_mutex_lock(&mutex_write);
+        MUTEX_LOCK(&mutex_write);
         write_count++;
         if (write_count == 1)
             sem_wait(&sem_reader);
-        pthread_mutex_unlock(&mutex_write);
+        MUTEX_UNLOCK(&mutex_write);
         
         sem_wait(&sem_writer);
 
@@ -39,11 +58,11 @@ void *writer(void *arg)
 
         sem_post(&sem_writer);
         
-        pthread_mutex_lock(&mutex_write);
+        MUTEX_LOCK(&mutex_write);
         write_count--;
         if (write_count == 0)
             sem_post(&sem_reader);
-        pthread_mutex_unlock(&mutex_write);
+        MUTEX_UNLOCK(&mutex_write);
     }
     return (NULL);
 }
@@ -53,25 +72,25 @@ void *reader(void *arg)
     (void)arg;
     for (int i = 0; i < N_CYCLES_READERS; i++)
     {
-        pthread_mutex_lock(&mutex_writer_priority);
+        MUTEX_LOCK(&mutex_writer_priority);
         sem_wait(&sem_reader);
 
-        pthread_mutex_lock(&mutex_read);
+        MUTEX_LOCK(&mutex_read);
         read_count++;
         if (read_count == 1)
             sem_wait(&sem_writer); // first reader locks writer
-        pthread_mutex_unlock(&mutex_read);
+        MUTEX_UNLOCK(&mutex_read);
         
         sem_post(&sem_reader);
-        pthread_mutex_unlock(&mutex_writer_priority);
+        MUTEX_UNLOCK(&mutex_writer_priority);
 
         simulate_work();
 
-        pthread_mutex_lock(&mutex_read);
+        MUTEX_LOCK(&mutex_read);
         read_count--;
         if (read_count == 0)
             sem_post(&sem_writer); // last reader unlocks writer
-        pthread_mutex_unlock(&mutex_read);
+        MUTEX_UNLOCK(&mutex_read);
     }
     return (NULL);
 }
@@ -84,9 +103,9 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    pthread_mutex_init(&mutex_read, NULL);
-    pthread_mutex_init(&mutex_write, NULL);
-    pthread_mutex_init(&mutex_writer_priority, NULL);
+    MUTEX_INIT(&mutex_read);
+    MUTEX_INIT(&mutex_write);
+    MUTEX_INIT(&mutex_writer_priority);
     sem_init(&sem_reader, 0, 1);
     sem_init(&sem_writer, 0, 1);
 
@@ -116,11 +135,29 @@ int main(int argc, char *argv[])
         pthread_join(writers[i], NULL);
     }
 
-    sem_destroy(&sem_reader);
-    sem_destroy(&sem_writer);
-    pthread_mutex_destroy(&mutex_read);
-    pthread_mutex_destroy(&mutex_write);
-    pthread_mutex_destroy(&mutex_writer_priority);
+    if (sem_destroy(&sem_reader) != 0)
+    {
+        fprintf(stderr, "Error destroying sem_reader\n");
+    }
 
+    if (sem_destroy(&sem_writer) != 0)
+    {
+        fprintf(stderr, "Error destroying sem_writer\n");
+    }
+
+    if (MUTEX_DESTROY(&mutex_read) != 0)
+    {
+        fprintf(stderr, "Error destroying mutex_read\n");
+    }
+
+    if (MUTEX_DESTROY(&mutex_write) != 0)
+    {
+        fprintf(stderr, "Error destroying mutex_write\n");
+    }
+
+    if (MUTEX_DESTROY(&mutex_writer_priority) != 0)
+    {
+        fprintf(stderr, "Error destroying mutex_writer_priority\n");
+    }
     return EXIT_SUCCESS;
 }

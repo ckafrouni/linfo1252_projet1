@@ -4,9 +4,6 @@
 #include <stdio.h>
 #endif
 
-/**
- * TEST_AND_SET
- */
 #ifdef TEST_AND_SET
 
 void lock(spinlock_t *mut)
@@ -19,23 +16,12 @@ void lock(spinlock_t *mut)
         "1: \n\t"
         "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
 }
 
-void unlock(spinlock_t *mut)
-{
-    asm volatile(
-        "movl $0, %0 \n\t" // Set the mut to 0
-        : "=m"(mut->flag));
-}
 
-#endif // TEST_AND_SET
-
-/**
- * TEST_AND_TEST_AND_SET
- */
-#ifdef TEST_AND_TEST_AND_SET
+#elif TEST_AND_TEST_AND_SET
 
 void lock(spinlock_t *mut)
 {
@@ -49,27 +35,15 @@ void lock(spinlock_t *mut)
 
         "movl %1, %0 \n\t"  // Move the value of the mut to register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
 
         "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
 }
 
-void unlock(spinlock_t *mut)
-{
-    asm volatile(
-        "movl $0, %0 \n\t" // Set the mut to 0
-        : "=m"(mut->flag));
-}
-
-#endif // TEST_AND_TEST_AND_SET
-
-/**
- * BACKOFF_TEST_AND_TEST_AND_SET
- */
-#ifdef BACKOFF_TEST_AND_TEST_AND_SET
+#elif BACKOFF_TEST_AND_TEST_AND_SET
 
 #include <time.h>
 
@@ -87,14 +61,15 @@ void lock(spinlock_t *mut)
 
     while (expected != 0)
     {
-        // while (mut->flag != 0)
-        //     ;
-
         asm volatile(
             "1: \n\t"
-            "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
+            "movl %1, %0 \n\t"  // Move the value of the mut to register %0 (one)
             "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-            "jnz 1b \n\t"     // If not zero, jump back to the beginning of the loop (mut was not free)
+            "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
+
+            "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
+            // "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
+            // "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
             : "+r"(expected), "+m"(mut->flag));
 
         if (expected != 0)
@@ -111,6 +86,14 @@ void lock(spinlock_t *mut)
     }
 }
 
+#endif
+
+int spinlock_init(spinlock_t *mut)
+{
+    mut->flag = 0;
+    return 0;
+}
+
 void unlock(spinlock_t *mut)
 {
     asm volatile(
@@ -118,4 +101,8 @@ void unlock(spinlock_t *mut)
         : "=m"(mut->flag));
 }
 
-#endif // BACKOFF_TEST_AND_TEST_AND_SET
+int spinlock_destroy(spinlock_t *mut)
+{
+    (void)mut;
+    return 0;
+}

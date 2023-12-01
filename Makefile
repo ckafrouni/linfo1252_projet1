@@ -8,10 +8,15 @@ LIBS := -lpthread -lrt
 DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
+SOURCES := $(filter-out $(SRC_DIR)/lock.c,$(SOURCES))
 OBJECTS = $(DIR_TARGET)/obj/test_and_set.o $(DIR_TARGET)/obj/test_and_test_and_set.o $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o
-EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%,$(SOURCES))
-EXECUTABLES := $(filter-out $(DIR_TARGET)/lock,$(EXECUTABLES))
-EXECUTABLES += $(DIR_TARGET)/lock_test_and_set $(DIR_TARGET)/lock_test_and_test_and_set $(DIR_TARGET)/lock_backoff_test_and_test_and_set
+EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/default_lib/%,$(SOURCES))
+EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/custom_lib/%_test_and_set,$(SOURCES))
+EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/custom_lib/%_test_and_test_and_set,$(SOURCES))
+EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/custom_lib/%_backoff_test_and_test_and_set,$(SOURCES))
+EXECUTABLES += $(DIR_TARGET)/custom_lib/lock_test_and_set \
+$(DIR_TARGET)/custom_lib/lock_test_and_test_and_set \
+$(DIR_TARGET)/custom_lib/lock_backoff_test_and_test_and_set
 
 all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 	@echo "Build finished"
@@ -23,8 +28,10 @@ debug: all
 $(DIR_TARGET):
 	mkdir $(DIR_TARGET)
 	mkdir $(DIR_TARGET)/obj
+	mkdir $(DIR_TARGET)/custom_lib
+	mkdir $(DIR_TARGET)/default_lib
 
-# Compile lib/lock.c with different flags for different lock implementations
+# Compile lib/lock.c with different flags for different lock implementations objects
 $(DIR_TARGET)/obj/test_and_set.o: $(SRC_DIR)/lib/lock.c
 	$(CC) -DTEST_AND_SET $(CFLAGS) -c $< -o $@ $(LIBS)
 
@@ -34,18 +41,28 @@ $(DIR_TARGET)/obj/test_and_test_and_set.o: $(SRC_DIR)/lib/lock.c
 $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o: $(SRC_DIR)/lib/lock.c
 	$(CC) -DBACKOFF_TEST_AND_TEST_AND_SET $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/lock_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c
-	$(CC) -DTEST_AND_SET $(CFLAGS) $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
+# Compile executables of the lock performance test with different flags for different lock implementations
+$(DIR_TARGET)/custom_lib/lock_test_and_set: $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c
+	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
 
-$(DIR_TARGET)/lock_test_and_test_and_set: $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c
-	$(CC) -DTEST_AND_TEST_AND_SET $(CFLAGS) $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
+$(DIR_TARGET)/custom_lib/lock_test_and_test_and_set: $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c
+	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
 
-$(DIR_TARGET)/lock_backoff_test_and_test_and_set: $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c
-	$(CC) -DBACKOFF_TEST_AND_TEST_AND_SET $(CFLAGS) $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
+$(DIR_TARGET)/custom_lib/lock_backoff_test_and_test_and_set: $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c
+	$(CC) $(CFLAGS) $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c -o $@ $(LIBS)
 
-# Compile all other files
-$(DIR_TARGET)/%: $(SRC_DIR)/%.c
+# Compile all other targets
+$(DIR_TARGET)/default_lib/%: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
+
+$(DIR_TARGET)/custom_lib/%_test_and_set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test_and_set.o
+	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $< $(DIR_TARGET)/obj/test_and_set.o -o $@ $(LIBS)
+
+$(DIR_TARGET)/custom_lib/%_test_and_test_and_set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/test_and_test_and_set.o
+	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $< $(DIR_TARGET)/obj/test_and_test_and_set.o -o $@ $(LIBS)
+
+$(DIR_TARGET)/custom_lib/%_backoff_test_and_test_and_set: $(SRC_DIR)/%.c $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o
+	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $< $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o -o $@ $(LIBS)
 
 # Targets for building individual executables
 build_philosophers: $(DIR_TARGET) $(DIR_TARGET)/philosophers
