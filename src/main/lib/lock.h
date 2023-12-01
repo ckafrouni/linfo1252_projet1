@@ -3,7 +3,7 @@
 
 typedef struct
 {
-    volatile int mut;
+    int flag;
 } spinlock_t;
 
 void lock(spinlock_t *mut);
