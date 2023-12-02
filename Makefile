@@ -9,7 +9,8 @@ DIR_TARGET := target
 SRC_DIR := src/main
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 SOURCES := $(filter-out $(SRC_DIR)/lock.c,$(SOURCES))
-OBJECTS = $(DIR_TARGET)/obj/test-and-set.o $(DIR_TARGET)/obj/test-and-test-and-set.o $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o $(DIR_TARGET)/obj/sem.o
+OBJECTS = $(DIR_TARGET)/obj/test-and-set.o $(DIR_TARGET)/obj/test-and-test-and-set.o \
+$(DIR_TARGET)/obj/backoff-test-and-test-and-set.o $(DIR_TARGET)/obj/sem.o
 EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_standard,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_test-and-set,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_TARGET)/%_test-and-test-and-set,$(SOURCES))
@@ -18,8 +19,15 @@ EXECUTABLES += $(DIR_TARGET)/lock_test-and-set \
 $(DIR_TARGET)/lock_test-and-test-and-set \
 $(DIR_TARGET)/lock_backoff-test-and-test-and-set
 
-all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
-	@echo "Build finished"
+all: tmp $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
+	@echo "\e[31m======= Build finished! =======\e[0m"
+tmp:
+	@echo "\e[32mSOURCES:\e[0m\n$(SOURCES)"
+	@echo "\e[32mOBJECTS:\e[0m\n$(OBJECTS)"
+	@echo "\e[32mEXECUTABLES:\e[0m\n$(EXECUTABLES)"
+	@echo "\e[32mCFLAGS: \e[0m$(CFLAGS)"
+	@echo "\e[32mLIBS: \e[0m$(LIBS)"
+	@echo "\e[31m====== Build starting... \e[31m======\e[0m"
 
 # Debug build (Allows c code wrapped in DEBUG to be compiled)
 debug: CFLAGS += $(DFLAGS)
@@ -43,13 +51,13 @@ $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o: $(SRC_DIR)/lib/lock.c $(SRC_D
 $(DIR_TARGET)/obj/sem.o: $(SRC_DIR)/lib/sem.c $(SRC_DIR)/lib/sem.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_TARGET)/custom_lib/lock_test-and-set: $(DIR_TARGET)/obj/test-and-set.o $(SRC_DIR)/lock.c
+$(DIR_TARGET)/lock_test-and-set: $(DIR_TARGET)/obj/test-and-set.o $(SRC_DIR)/lock.c
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-$(DIR_TARGET)/custom_lib/lock_test-and-test-and-set: $(DIR_TARGET)/obj/test-and-test-and-set.o $(SRC_DIR)/lock.c
+$(DIR_TARGET)/lock_test-and-test-and-set: $(DIR_TARGET)/obj/test-and-test-and-set.o $(SRC_DIR)/lock.c
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-$(DIR_TARGET)/custom_lib/lock_backoff-test-and-test-and-set: $(DIR_TARGET)/obj/backoff_test_and_test_and_set.o $(SRC_DIR)/lock.c
+$(DIR_TARGET)/lock_backoff-test-and-test-and-set: $(DIR_TARGET)/obj/backoff-test-and-test-and-set.o $(SRC_DIR)/lock.c
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 # Compile all other targets

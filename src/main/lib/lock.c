@@ -1,16 +1,9 @@
 #include "lock.h"
 
-#ifdef DEBUG
-#include <stdio.h>
-#endif
-
 #ifdef TEST_AND_SET
 
 void lock(spinlock_t *mut)
 {
-    #ifdef DEBUG
-    printf("Enter in test-and-set lock\n");
-    #endif
     int one = 1;
     asm volatile(
         "1: \n\t"
@@ -18,21 +11,13 @@ void lock(spinlock_t *mut)
         "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
         "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
         : "+r"(one), "+m"(mut->flag));
-    #ifdef DEBUG
-    printf("Exit from test-and-set lock\n");
-    #endif
 }
-
 
 #elif TEST_AND_TEST_AND_SET
 #include <stdio.h>
 
 void lock(spinlock_t *mut)
 {
-#ifdef DEBUG
-    printf("test-and-test-and-set lock\n");
-#endif
-
     int one = 1;
     asm volatile(
         "1: \n\t"
@@ -56,10 +41,6 @@ void lock(spinlock_t *mut)
 
 void lock(spinlock_t *mut)
 {
-#ifdef DEBUG
-    printf("backoff-test-and-test-and-set lock\n");
-#endif
-
     int expected = 1;
     int delay = MIN_DELAY;
 
