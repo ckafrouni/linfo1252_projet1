@@ -6,7 +6,7 @@ import argparse
 
 
 def plot_data(input_dir, output_dir, file_category):
-    input_files = glob.glob(f"{input_dir}/{file_category}/res_*_{file_category}.csv");
+    input_files = glob.glob(f"{input_dir}/{file_category}/res_*.csv");
         
     for file in input_files:
         data = pd.read_csv(file)
@@ -19,7 +19,7 @@ def plot_data(input_dir, output_dir, file_category):
         plt.ylim(0)
         plt.grid(True, axis='y')
         
-        plt.savefig(f"{output_dir}/{file_category}/{name}_{file_category}.pdf", format='pdf')
+        plt.savefig(f"{output_dir}/{file_category}/{name}.pdf", format='pdf')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate plot for philosophers application tests')
