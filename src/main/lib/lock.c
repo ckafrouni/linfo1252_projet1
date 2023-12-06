@@ -1,6 +1,6 @@
 #include "lock.h"
 
-#ifdef TEST_AND_SET
+#ifdef TAS
 
 void lock(spinlock_t *mut)
 {
@@ -13,7 +13,9 @@ void lock(spinlock_t *mut)
     }
 }
 
-#elif TEST_AND_TEST_AND_SET
+#endif // TAS
+
+#ifdef TTAS
 #include <stdio.h>
 
 void lock(spinlock_t *mut)
@@ -30,7 +32,9 @@ void lock(spinlock_t *mut)
     }
 }
 
-#elif BACKOFF_TEST_AND_TEST_AND_SET
+#endif // TTAS
+
+#ifdef BTTAS
 
 #include <time.h>
 
@@ -65,7 +69,7 @@ void lock(spinlock_t *mut)
 
 }
 
-#endif
+#endif // BTTAS
 
 int spinlock_init(spinlock_t *mut)
 {
