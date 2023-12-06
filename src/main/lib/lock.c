@@ -4,13 +4,13 @@
 
 void lock(spinlock_t *mut)
 {
-    int one = 1;
-    asm volatile(
-        "1: \n\t"
-        "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
-        "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
-        : "+r"(one), "+m"(mut->flag));
+    int reg = 1;
+    while (reg == 1)
+    {
+        asm volatile(
+            "xchgl %0, %1 \n\t"
+            : "+r"(reg), "+m"(mut->flag));
+    }
 }
 
 #elif TEST_AND_TEST_AND_SET
@@ -18,18 +18,16 @@ void lock(spinlock_t *mut)
 
 void lock(spinlock_t *mut)
 {
-    int one = 1;
-    asm volatile(
-        "1: \n\t"
-
-        "movl %1, %0 \n\t"  // Move the value of the mut to register %0 (one)
-        "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
-
-        "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
-        "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-        "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
-        : "+r"(one), "+m"(mut->flag));
+    int reg = 1;
+    while (reg == 1)
+    {
+        if (mut->flag == 0)
+        {
+            asm volatile(
+                "xchgl %0, %1 \n\t"
+                : "+r"(reg), "+m"(mut->flag));
+        }
+    }
 }
 
 #elif BACKOFF_TEST_AND_TEST_AND_SET
@@ -39,36 +37,32 @@ void lock(spinlock_t *mut)
 #define MIN_DELAY 1
 #define MAX_DELAY 1000
 
+struct timespec ts_btatas = {
+    .tv_nsec = MIN_DELAY,
+};
+
 void lock(spinlock_t *mut)
 {
-    int expected = 1;
-    int delay = MIN_DELAY;
 
-    while (expected != 0)
+    int reg = 1;
+    while (reg == 1)
     {
-        asm volatile(
-            "1: \n\t"
-            "movl %1, %0 \n\t"  // Move the value of the mut to register %0 (one)
-            "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-            "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
-
-            "xchgl %0, %1 \n\t" // Exchange the mut value with register %0 (one)
-            // "testl %0, %0 \n\t" // Test if the old value was 0 (the mut was free)
-            // "jnz 1b \n\t"       // If not zero, jump back to the beginning of the loop (mut was not free)
-            : "+r"(expected), "+m"(mut->flag));
-
-        if (expected != 0)
+        if (mut->flag == 0)
         {
-            struct timespec ts;
-            ts.tv_nsec = delay;
-            ts.tv_sec = 0;
-            nanosleep(&ts, NULL);
-            if (delay < MAX_DELAY)
+            asm volatile(
+                "xchgl %0, %1 \n\t"
+                : "+r"(reg), "+m"(mut->flag));
+        }
+        else
+        {
+            nanosleep(&ts_btatas, NULL);
+            if (ts_btatas.tv_nsec < MAX_DELAY)
             {
-                delay *= 2;
+                ts_btatas.tv_nsec *= 2;
             }
         }
     }
+
 }
 
 #endif
