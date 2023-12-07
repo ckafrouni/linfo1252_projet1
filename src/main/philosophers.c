@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifdef CUSTOM_MUTEX_AND_SEMAPHORE
-#include "./lib/lock.h"
+#include "../lib/lock.h"
 
 #define MUTEX_T spinlock_t
 #define MUTEX_INIT(l) spinlock_init(l)

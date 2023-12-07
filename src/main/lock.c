@@ -2,11 +2,25 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "lib/lock.h"
+#ifdef CUSTOM_MUTEX_AND_SEMAPHORE
+#include "../lib/lock.h"
+
+#define MUTEX_T spinlock_t
+#define MUTEX_INIT(l) spinlock_init(l)
+#define MUTEX_LOCK(l) lock(l)
+#define MUTEX_UNLOCK(l) unlock(l)
+#define MUTEX_DESTROY(l) spinlock_destroy(l)
+#else
+#define MUTEX_T pthread_mutex_t
+#define MUTEX_INIT(l) pthread_mutex_init(l, NULL)
+#define MUTEX_LOCK(l) pthread_mutex_lock(l)
+#define MUTEX_UNLOCK(l) pthread_mutex_unlock(l)
+#define MUTEX_DESTROY(l) pthread_mutex_destroy(l)
+#endif
 
 #define TOTAL_CYCLES 6400
 
-spinlock_t mut;
+MUTEX_T mut;
 
 void critical_section()
 {
@@ -19,9 +33,9 @@ void *thread_function(void *arg)
     int n = *(int *)arg;
     for (int i = 0; i < TOTAL_CYCLES / n; i++)
     {
-        lock(&mut);
+        MUTEX_LOCK(&mut);
         critical_section();
-        unlock(&mut);
+        MUTEX_UNLOCK(&mut);
     }
     return NULL;
 }

@@ -21,7 +21,7 @@ void lock(spinlock_t *mut)
 void lock(spinlock_t *mut)
 {
     int reg = 1;
-    while (reg == 1)
+    while (reg != 0)
     {
         if (mut->flag == 0)
         {
@@ -29,6 +29,7 @@ void lock(spinlock_t *mut)
                 "xchgl %0, %1 \n\t"
                 : "+r"(reg), "+m"(mut->flag));
         }
+        
     }
 }
 
@@ -66,7 +67,6 @@ void lock(spinlock_t *mut)
             }
         }
     }
-
 }
 
 #endif // BTTAS
