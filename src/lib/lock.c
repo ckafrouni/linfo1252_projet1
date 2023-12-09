@@ -22,9 +22,9 @@ inline void lock(spinlock_t *mut)
     {
         if (mut->flag == 1)
         {
-            __asm__ __volatile__("pause");
+            asm volatile("pause");
         }
-        __asm__ __volatile__(
+        asm volatile(
             "xchgl %0, %1 \n\t"
             : "+r"(is_locked), "+m"(mut->flag)
         );
