@@ -37,13 +37,13 @@ $(DIR_TARGET):
 $(DIR_OBJ)/tas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/ttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h $(DIR_OBJ)
+$(DIR_OBJ)/ttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DTTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/bttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h $(DIR_OBJ)
+$(DIR_OBJ)/bttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DBTTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/sem.o: $(LIB_DIR)/sem.c $(LIB_DIR)/sem.h $(DIR_OBJ)
+$(DIR_OBJ)/sem.o: $(LIB_DIR)/sem.c $(LIB_DIR)/sem.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 # Compile all other targets
