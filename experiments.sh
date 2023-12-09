@@ -11,28 +11,30 @@ CSV="$PROJECT_DIR/tmp.csv"
 # ---------------------------------------------
 # EXPERIMENTS
 # ---------------------------------------------
-# EXPERIMENTS=(10 11)
-# EXPERIMENTS=(12 13 15 14)
-# EXPERIMENTS=(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)
-EXPERIMENTS=(5 6 7)
+EXPERIMENTS=(3 2 1)
+# We can do : 0 1 3 4 5 7 8 10 11 12 13 15
+if [ ! -z "${LOCAL}" ]; then
+    # EXPERIMENTS=(4 5 6 7 8 9 10 11 12 13 14 15 0 1 2 3)
+    EXPERIMENTS=(1 2 3)
+fi
 
 EXPERIMENTS_NAMES=(
-    "Philosophers        standard" # 0  - done
-    "Philosophers        tas"      # 1  - done
-    "Philosophers        ttas"     # 2  - done
-    "Philosophers        bttas"    # 3  -  X
-    "Producers/consumers standard" # 4  - done
-    "Producers/consumers tas"      # 5  - done
-    "Producers/consumers ttas"     # 6  - done
-    "Producers/consumers bttas"    # 7  -  X
-    "Readers/writers     standard" # 8  - done
-    "Readers/writers     tas"      # 9  - done
-    "Readers/writers     ttas"     # 10 - done
-    "Readers/writers     bttas"    # 11 -  X
-    "Lock                standard" # 12 -  X
-    "Lock                tas"      # 13 - done
-    "Lock                ttas"     # 14 - done
-    "Lock                bttas"    # 15 -  X
+    "Philosophers           standard" # 0  - x - ✔️
+    "Philosophers           tas"      # 1  - x -
+    "Philosophers           ttas"     # 2
+    "Philosophers           bttas"    # 3  - x - ✔️
+    "Producers/consumers    standard" # 4  - x - ✔️
+    "Producers/consumers    tas"      # 5  - x - ✔️
+    "Producers/consumers    ttas"     # 6
+    "Producers/consumers    bttas"    # 7  - x - ✔️
+    "Readers/writers        standard" # 8  - x - ✔️
+    "Readers/writers        tas"      # 9  - x - ✔️
+    "Readers/writers        ttas"     # 10
+    "Readers/writers        bttas"    # 11 - x - ✔️
+    "Lock/unlock            standard" # 12 - x - ✔️
+    "Lock/unlock            tas"      # 13 - x - ✔️
+    "Lock/unlock            ttas"     # 14
+    "Lock/unlock            bttas"    # 15 - x - ✔️
 )
 
 EXPERIMENTS_CMDS=(
@@ -48,15 +50,18 @@ EXPERIMENTS_CMDS=(
     "$DIR_TESTS/perf.sh $DIR_EXE/readers-writers_tas '(1,2,4,8,16,32)' $CSV"
     "$DIR_TESTS/perf.sh $DIR_EXE/readers-writers_ttas '(1,2,4,8,16,32)' $CSV"
     "$DIR_TESTS/perf.sh $DIR_EXE/readers-writers_bttas '(1,2,4,8,16,32)' $CSV"
-    "$DIR_TESTS/perf.sh $DIR_EXE/lock_standard '(1,2,4,8,16,32,64)' $CSV"
-    "$DIR_TESTS/perf.sh $DIR_EXE/lock_tas '(1,2,4,8,16,32,64)' $CSV"
-    "$DIR_TESTS/perf.sh $DIR_EXE/lock_ttas '(1,2,4,8,16,32,64)' $CSV"
-    "$DIR_TESTS/perf.sh $DIR_EXE/lock_bttas '(1,2,4,8,16,32,64)' $CSV"
-    )
+    "$DIR_TESTS/perf.sh $DIR_EXE/lock-unlock_standard '(1,2,4,8,16,32,64)' $CSV"
+    "$DIR_TESTS/perf.sh $DIR_EXE/lock-unlock_tas '(1,2,4,8,16,32,64)' $CSV"
+    "$DIR_TESTS/perf.sh $DIR_EXE/lock-unlock_ttas '(1,2,4,8,16,32,64)' $CSV"
+    "$DIR_TESTS/perf.sh $DIR_EXE/lock-unlock_bttas '(1,2,4,8,16,32,64)' $CSV"
+)
 
 # ---------------------------------------------
 # RUN EXPERIMENTS
 # ---------------------------------------------
+if [ ! -z "${LOCAL}" ]; then
+    lscpu >"./data/local/lscpu.txt"
+fi
 
 for i in "${EXPERIMENTS[@]}"; do
     echo -e "\n\e[32m#$i ${EXPERIMENTS_NAMES[$i]}\e[0m"
@@ -66,6 +71,10 @@ for i in "${EXPERIMENTS[@]}"; do
         bash ${EXPERIMENTS_CMDS[$i]}
     fi
     echo -e "\e[33;1m${EXPERIMENTS_NAMES[$i]}\e[0;34m"
-    cat $CSV
+    if [ ! -z "${LOCAL}" ]; then
+        cat $CSV >"./data/local/${i}.csv"
+    else
+        cat $CSV
+    fi
     echo -e "\e[0m"
 done

@@ -32,17 +32,11 @@ typedef struct
 void eat(int id)
 {
     (void)id;
-    #ifdef DEBUG
-    printf("Philosopher [%d] eats\n", id);
-    #endif
 }
 
 void think(int id)
 {
     (void)id;
-    #ifdef DEBUG
-    printf("Philosopher [%d] thinks\n", id);
-    #endif
 }
 
 void *philosopher(void *arg)

@@ -1,7 +1,8 @@
 #include "lock.h"
 
 #ifdef TAS
-void lock(spinlock_t *mut)
+
+inline void lock(spinlock_t *mut)
 {
     int is_locked = 1;
     do
@@ -17,7 +18,7 @@ void lock(spinlock_t *mut)
 #ifdef TTAS
 #include <stdio.h>
 
-void lock(spinlock_t *mut)
+inline void lock(spinlock_t *mut)
 {
     int is_locked = 1;
     do
@@ -41,7 +42,7 @@ struct timespec ts_btatas = {
     .tv_nsec = MIN_DELAY,
 };
 
-void lock(spinlock_t *mut)
+inline void lock(spinlock_t *mut)
 {
 
     int reg = 1;
@@ -71,7 +72,7 @@ int spinlock_init(spinlock_t *mut)
     return 0;
 }
 
-void unlock(spinlock_t *mut)
+inline void unlock(spinlock_t *mut)
 {
     asm volatile(
         "movl $0, %0 \n\t" // Set the mut to 0

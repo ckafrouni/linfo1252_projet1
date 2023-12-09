@@ -23,6 +23,7 @@ EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_tas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_ttas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_bttas,$(SOURCES))
 
+
 all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 	@echo "\e[31m======= Build finished! =======\e[0m"
 
@@ -30,26 +31,27 @@ all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 debug: CFLAGS += $(DFLAGS)
 debug: all
 
+
 $(DIR_TARGET): 
 	mkdir -p $(DIR_TARGET)
-
+	
 $(DIR_OBJ):
 	mkdir -p $(DIR_OBJ)
-
+	
 $(DIR_EXE):
-	mkdir -p $(DIR_EXE)
+	mkdir -p $(DIR_EXE)	
 
 # Compile lib/lock.c with different flags for different lock implementations objects
 $(DIR_OBJ)/tas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/ttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h $(DIR_OBJ)
+$(DIR_OBJ)/ttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DTTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/bttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h $(DIR_OBJ)
+$(DIR_OBJ)/bttas.o: $(LIB_DIR)/lock.c $(LIB_DIR)/lock.h
 	$(CC) -DBTTAS $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(DIR_OBJ)/sem.o: $(LIB_DIR)/sem.c $(LIB_DIR)/sem.h $(DIR_OBJ)
+$(DIR_OBJ)/sem.o: $(LIB_DIR)/sem.c $(LIB_DIR)/sem.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 # Compile all other targets
@@ -65,6 +67,7 @@ $(DIR_EXE)/%_ttas: $(SRC_DIR)/%.c $(DIR_OBJ)/ttas.o $(DIR_OBJ)/sem.o
 $(DIR_EXE)/%_bttas: $(SRC_DIR)/%.c $(DIR_OBJ)/bttas.o $(DIR_OBJ)/sem.o
 	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $^ -o $@ $(LIBS)
 
+
 # ---------------------------------------------
 # RUN SECTION
 # ---------------------------------------------
@@ -72,10 +75,24 @@ studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
 	cd $(DIR_TARGET)/proj1 && make -j -s && (time -p ./experiments.sh)
 
+SUBDIR := inginious
 DIR_TESTS := src/test
-DIR_PLOTS := src/plot
-DIR_DATA := data
-DIR_GRAPHS := plots
+DIR_DATA := data/$(SUBDIR)
+DIR_GRAPHS := plots/$(SUBDIR)
+
+merge_data:
+	mkdir -p $(DIR_DATA)/combined
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined producers-consumers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined readers-writers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined philosophers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined lock-unlock
+
+plot: merge_data
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) producers-consumers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) readers-writers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) philosophers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) lock-unlock
+
 
 # ---------------------------------------------
 # UTILITY SECTION
