@@ -23,12 +23,14 @@ EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_tas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_ttas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_bttas,$(SOURCES))
 
+
 all: $(DIR_TARGET) $(OBJECTS) $(EXECUTABLES)
 	@echo "\e[31m======= Build finished! =======\e[0m"
 
 # Debug build (Allows c code wrapped in DEBUG to be compiled)
 debug: CFLAGS += $(DFLAGS)
 debug: all
+
 
 $(DIR_TARGET): 
 	mkdir -p $(DIR_TARGET)
@@ -65,6 +67,7 @@ $(DIR_EXE)/%_ttas: $(SRC_DIR)/%.c $(DIR_OBJ)/ttas.o $(DIR_OBJ)/sem.o
 $(DIR_EXE)/%_bttas: $(SRC_DIR)/%.c $(DIR_OBJ)/bttas.o $(DIR_OBJ)/sem.o
 	$(CC) -DCUSTOM_MUTEX_AND_SEMAPHORE $(CFLAGS) $^ -o $@ $(LIBS)
 
+
 # ---------------------------------------------
 # RUN SECTION
 # ---------------------------------------------
@@ -72,7 +75,7 @@ studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
 	cd $(DIR_TARGET)/proj1 && make -j -s && (time -p ./experiments.sh)
 
-SUBDIR := local
+SUBDIR := inginious
 DIR_TESTS := src/test
 DIR_DATA := data/$(SUBDIR)
 DIR_GRAPHS := plots/$(SUBDIR)
