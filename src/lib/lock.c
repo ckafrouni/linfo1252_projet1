@@ -2,15 +2,14 @@
 
 #ifdef TAS
 
-void lock(spinlock_t *mut)
+inline void lock(spinlock_t *mut)
 {
     int reg = 1;
-    while (reg == 1)
-    {
+    do {
         asm volatile(
             "xchgl %0, %1 \n\t"
             : "+r"(reg), "+m"(mut->flag));
-    }
+    } while (reg == 1);
 }
 
 #endif // TAS
@@ -18,7 +17,7 @@ void lock(spinlock_t *mut)
 #ifdef TTAS
 #include <stdio.h>
 
-void lock(spinlock_t *mut)
+inline void lock(spinlock_t *mut)
 {
     int reg = 1;
     while (reg != 0)
@@ -46,7 +45,7 @@ struct timespec ts_btatas = {
     .tv_nsec = MIN_DELAY,
 };
 
-void lock(spinlock_t *mut)
+inline void lock(spinlock_t *mut)
 {
 
     int reg = 1;
@@ -77,7 +76,7 @@ int spinlock_init(spinlock_t *mut)
     return 0;
 }
 
-void unlock(spinlock_t *mut)
+inline void unlock(spinlock_t *mut)
 {
     asm volatile(
         "movl $0, %0 \n\t" // Set the mut to 0
