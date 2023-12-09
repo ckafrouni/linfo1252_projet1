@@ -3,7 +3,7 @@
 # ---------------------------------------------
 CC := gcc
 DFLAGS := -DDEBUG -g
-CFLAGS := -Wall -Wextra -Werror -O2
+CFLAGS := -Wall -Wextra -Werror -O3
 LIBS := -lpthread -lrt
 
 DIR_TARGET := target

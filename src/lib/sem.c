@@ -17,14 +17,9 @@ void sem_init(sem_t *sem, int pshared, unsigned int value)
 void sem_wait(sem_t *sem)
 {    
     lock(&sem->lock);
-    while (sem->value <= 0) {
-        unlock(&sem->lock);
-
-        // nanosleep(&ts, NULL);
-
-        lock(&sem->lock);
+    if (sem->value > 0) {
+        sem->value--;
     }
-    sem->value--;
     unlock(&sem->lock);
 }
 

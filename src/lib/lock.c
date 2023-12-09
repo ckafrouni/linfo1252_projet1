@@ -1,18 +1,17 @@
 #include "lock.h"
 
 #ifdef TAS
-
 void lock(spinlock_t *mut)
 {
-    int reg = 1;
-    while (reg == 1)
+    int is_locked = 1;
+    do
     {
         asm volatile(
             "xchgl %0, %1 \n\t"
-            : "+r"(reg), "+m"(mut->flag));
+            : "+r"(is_locked), "+m"(mut->flag));
     }
+    while (is_locked == 1);
 }
-
 #endif // TAS
 
 #ifdef TTAS
@@ -20,23 +19,19 @@ void lock(spinlock_t *mut)
 
 void lock(spinlock_t *mut)
 {
-    int reg = 1;
-    while (reg != 0)
+    int is_locked = 1;
+    do
     {
-        if (mut->flag == 0)
-        {
-            asm volatile(
-                "xchgl %0, %1 \n\t"
-                : "+r"(reg), "+m"(mut->flag));
-        }
-        
-    }
+        while (mut->flag == 1) {};
+        __asm__ __volatile__(
+            "xchgl %0, %1 \n\t"
+            : "+r"(is_locked), "+m"(mut->flag)
+        );
+    } while (is_locked == 1);
 }
-
 #endif // TTAS
 
 #ifdef BTTAS
-
 #include <time.h>
 
 #define MIN_DELAY 1
@@ -68,7 +63,6 @@ void lock(spinlock_t *mut)
         }
     }
 }
-
 #endif // BTTAS
 
 int spinlock_init(spinlock_t *mut)
