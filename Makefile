@@ -14,9 +14,11 @@ LIB_DIR := src/lib
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 
-OBJECTS = $(DIR_OBJ)/tas.o $(DIR_OBJ)/ttas.o $(DIR_OBJ)/bttas.o $(DIR_OBJ)/sem.o
+OBJECTS = $(DIR_OBJ)
+OBJECTS += $(DIR_OBJ)/tas.o $(DIR_OBJ)/ttas.o $(DIR_OBJ)/bttas.o $(DIR_OBJ)/sem.o
 
-EXECUTABLES = $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_standard,$(SOURCES))
+EXECUTABLES = $(DIR_EXE)
+EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_standard,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_tas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_ttas,$(SOURCES))
 EXECUTABLES += $(patsubst $(SRC_DIR)/%.c,$(DIR_EXE)/%_bttas,$(SOURCES))
@@ -30,7 +32,11 @@ debug: all
 
 $(DIR_TARGET): 
 	mkdir -p $(DIR_TARGET)
+	
+$(DIR_OBJ):
 	mkdir -p $(DIR_OBJ)
+	
+$(DIR_EXE):
 	mkdir -p $(DIR_EXE)	
 
 # Compile lib/lock.c with different flags for different lock implementations objects
@@ -66,23 +72,23 @@ studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
 	cd $(DIR_TARGET)/proj1 && make -j -s && (time -p ./experiments.sh)
 
-DIR_GRAPHS := plots
+SUBDIR := local
 DIR_TESTS := src/test
-DIR_DATA := data
-SUBDIR=local
+DIR_DATA := data/$(SUBDIR)
+DIR_GRAPHS := plots/$(SUBDIR)
 
 merge_data:
-	mkdir -p $(DIR_DATA)/$(SUBDIR)/combined
-	-python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA)/$(SUBDIR) $(DIR_DATA)/$(SUBDIR)/combined producers-consumers
-	-python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA)/$(SUBDIR) $(DIR_DATA)/$(SUBDIR)/combined readers-writers
-	-python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA)/$(SUBDIR) $(DIR_DATA)/$(SUBDIR)/combined philosophers
-	-python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA)/$(SUBDIR) $(DIR_DATA)/$(SUBDIR)/combined lock-unlock
+	mkdir -p $(DIR_DATA)/combined
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined producers-consumers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined readers-writers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined philosophers
+	python3 $(DIR_TESTS)/merge_results.py $(DIR_DATA) $(DIR_DATA)/combined lock-unlock
 
 plot: merge_data
-	-python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/$(SUBDIR)/combined $(DIR_GRAPHS)/$(SUBDIR) producers-consumers
-	-python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/$(SUBDIR)/combined $(DIR_GRAPHS)/$(SUBDIR) readers-writers
-	-python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/$(SUBDIR)/combined $(DIR_GRAPHS)/$(SUBDIR) philosophers
-	-python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/$(SUBDIR)/combined $(DIR_GRAPHS)/$(SUBDIR) lock-unlock
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) producers-consumers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) readers-writers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) philosophers
+	python3 $(DIR_TESTS)/plot_perf.py $(DIR_DATA)/combined $(DIR_GRAPHS) lock-unlock
 
 
 # ---------------------------------------------

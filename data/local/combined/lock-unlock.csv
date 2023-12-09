@@ -1,4 +1,4 @@
-index,thread,time,run_index,build_type
+index,thread,time,run_index,lock
 0,1,0.001,0,bttas
 1,1,0.001,1,bttas
 2,1,0.001,2,bttas

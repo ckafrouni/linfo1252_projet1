@@ -7,20 +7,20 @@ def generate_file(input_dir, problem_set, output_dir):
     if not input_files:
         return
 
-    output_columns = ['index', 'thread', 'time', 'run_index', 'build_type']
+    output_columns = ['index', 'thread', 'time', 'run_index', 'lock']
     data = None
     idx_counter = 0 
 
     
     for file in input_files:
         df = pd.read_csv(file)
-        build_type = file.split('_')[-1].split('.')[0]
+        lock = file.split('_')[-1].split('.')[0]
 
-        df['build_type'] = build_type
+        df['lock'] = lock
 
         df['index'] = range(idx_counter, idx_counter + len(df))
         idx_counter += len(df)
-        df = df[['index', 'thread', 'time', 'run_index', 'build_type']]
+        df = df[['index', 'thread', 'time', 'run_index', 'lock']]
 
         if data is None:
             data = df
@@ -30,7 +30,7 @@ def generate_file(input_dir, problem_set, output_dir):
     data.to_csv(f"{output_dir}/{problem_set}.csv", index=False)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Append data from multiple CSV files to cpu_temp.csv')
+    parser = argparse.ArgumentParser(description='Merge data from a problem-set using a specific lock.')
     parser.add_argument('input_directory', type=str, help='')
     parser.add_argument('output_directory', type=str, help='')
     parser.add_argument('problem_set', type=str, help='')

@@ -14,8 +14,8 @@ def plot_data(input_dir, output_dir, problem_set):
     data = pd.read_csv(file)
 
     plt.figure(figsize=(8, 6))
-    sns.barplot(data=data, x="thread", y="time", hue="build_type", errorbar='sd')
-    plt.title(f"Time to process {problem_set} application by number of threads.")
+    sns.barplot(data=data, x="thread", y="time", hue="lock", errorbar='sd')
+    plt.title(f"Time to process *{problem_set}* problem by number of threads.")
     plt.xlabel('Number of treads')
     plt.ylabel('Execution time (seconds)')
     plt.ylim(0)
@@ -24,9 +24,9 @@ def plot_data(input_dir, output_dir, problem_set):
     plt.savefig(f"{output_dir}/{problem_set}.pdf", format='pdf')
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate plot for philosophers application tests')
-    parser.add_argument('input_dir', type=str, help='Directory to get data from')
-    parser.add_argument('output_dir', type=str, help='Directory to save plot to')
+    parser = argparse.ArgumentParser(description='Generate a plot from a problem-set')
+    parser.add_argument('input_dir', type=str, help='Input directory')
+    parser.add_argument('output_dir', type=str, help='Output directory')
     parser.add_argument('problem_set', type=str, help='')
     args = parser.parse_args()
 
