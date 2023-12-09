@@ -1,7 +1,6 @@
 #include "lock.h"
-
+#include <stdio.h>
 #ifdef TAS
-
 inline void lock(spinlock_t *mut)
 {
     int is_locked = 1;
@@ -16,14 +15,15 @@ inline void lock(spinlock_t *mut)
 #endif // TAS
 
 #ifdef TTAS
-#include <stdio.h>
-
 inline void lock(spinlock_t *mut)
 {
     int is_locked = 1;
     do
     {
-        while (mut->flag == 1) {};
+        if (mut->flag == 1)
+        {
+            __asm__ __volatile__("pause");
+        }
         __asm__ __volatile__(
             "xchgl %0, %1 \n\t"
             : "+r"(is_locked), "+m"(mut->flag)
