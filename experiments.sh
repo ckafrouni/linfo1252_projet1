@@ -15,7 +15,8 @@ EXPERIMENTS=(5 7 6)
 # We can do : 0 1 3 4 5 7 8 10 11 12 13 15
 if [ ! -z "${LOCAL}" ]; then
     # EXPERIMENTS=(4 5 6 7 8 9 10 11 12 13 14 15 0 1 2 3)
-    EXPERIMENTS=(1 2 3)
+    # EXPERIMENTS=(5 6 7 9 10 11 13 14 15 3 2 1)
+    EXPERIMENTS=(2 1)
 fi
 
 EXPERIMENTS_NAMES=(

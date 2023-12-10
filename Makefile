@@ -75,7 +75,7 @@ studsrv: clean zip
 	unzip $(DIR_TARGET)/proj1.zip -d $(DIR_TARGET)/proj1
 	cd $(DIR_TARGET)/proj1 && make -j -s && (time -p ./experiments.sh)
 
-SUBDIR := inginious
+SUBDIR := local
 DIR_TESTS := src/test
 DIR_DATA := data/$(SUBDIR)
 DIR_GRAPHS := plots/$(SUBDIR)

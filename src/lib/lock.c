@@ -47,7 +47,7 @@ inline void lock(spinlock_t *mut)
     int reg = 1;
     while (reg == 1)
     {
-        asm volatile("pause \n\t" ::: "memory");
+        // asm volatile("pause \n\t" ::: "memory");
         if (mut->flag == 0)
         {
             asm volatile(
