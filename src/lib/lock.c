@@ -1,5 +1,5 @@
 #include "lock.h"
-#include <stdio.h>
+
 #ifdef TAS
 inline void lock(spinlock_t *mut)
 {
@@ -7,10 +7,10 @@ inline void lock(spinlock_t *mut)
     do
     {
         asm volatile(
+            "pause \n\t"
             "xchgl %0, %1 \n\t"
-            : "+r"(is_locked), "+m"(mut->flag));
-    }
-    while (is_locked == 1);
+            : "+r"(is_locked), "+m"(mut->flag) :: "memory");
+    } while (is_locked == 1);
 }
 #endif // TAS
 
@@ -20,14 +20,13 @@ inline void lock(spinlock_t *mut)
     int is_locked = 1;
     do
     {
-        if (mut->flag == 1)
+        asm volatile("pause \n\t" ::: "memory");
+        if (mut->flag == 0)
         {
-            asm volatile("pause");
+            asm volatile(
+                "xchgl %0, %1 \n\t"
+                : "+r"(is_locked), "+m"(mut->flag));
         }
-        asm volatile(
-            "xchgl %0, %1 \n\t"
-            : "+r"(is_locked), "+m"(mut->flag)
-        );
     } while (is_locked == 1);
 }
 #endif // TTAS
@@ -48,6 +47,7 @@ inline void lock(spinlock_t *mut)
     int reg = 1;
     while (reg == 1)
     {
+        asm volatile("pause \n\t" ::: "memory");
         if (mut->flag == 0)
         {
             asm volatile(
